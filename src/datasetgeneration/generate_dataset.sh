@@ -1,5 +1,6 @@
 #!/bin/bash
-CCS=("reno" "cubic" "bbr" "bic" "cdg" "dctcp" "highspeed" "htcp" "hybla" "illinois" "lp" "nv" "scalable" "vegas" "veno" "westwood" "yeah")
+# CCS=("reno" "cubic" "bbr" "bic" "cdg" "dctcp" "highspeed" "htcp" "hybla" "illinois" "lp" "nv" "scalable" "vegas" "veno" "westwood" "yeah")
+CCS=("veno" "westwood" "yeah")
 DELAYS=(50 100)
 BW=2000
 BUFF_MUL=20

@@ -9,6 +9,7 @@ sudo tshark -r "$file" -Y "tcp" \
   -e tcp.len \
   -e tcp.seq \
   -e tcp.ack \
+  -e tcp.window_size \
   -e tcp.analysis.ack_rtt \
   -E header=y -E separator=, \
   > "$file-tcp.csv" 2>/dev/null

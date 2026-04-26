@@ -1,0 +1,58 @@
+Nebby Training Report
+============================================================
+
+CCAs handled by RULE-BASED detector (excluded from GNB):
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1776957088_tcp.csv
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1776957285_tcp.csv
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777003888_tcp.csv
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777004131_tcp.csv
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777033023_tcp.csv
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777033213_tcp.csv
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777133403_tcp.csv
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777133633_tcp.csv
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777185419_tcp.csv
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777185664_tcp.csv
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777207156_tcp.csv
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777207398_tcp.csv
+
+CCAs in GNB model:
+  bic            : 12 segments
+  cdg            : 43 segments
+  cubic          : 12 segments
+  dctcp          : 12 segments
+  highspeed      : 15 segments
+  htcp           : 26 segments
+  hybla          : 13 segments
+  illinois       : 12 segments
+  lp             : 12 segments
+  nv             : 12 segments
+  reno           : 12 segments
+  scalable       : 12 segments
+  vegas          : 12 segments
+  veno           : 13 segments
+  westwood       : 12 segments
+  yeah           : 12 segments
+
+Cross-validation classification report:
+              precision    recall  f1-score   support
+
+         bic      0.132     0.417     0.200        12
+         cdg      0.556     0.349     0.429        43
+       cubic      0.146     0.583     0.233        12
+       dctcp      0.000     0.000     0.000        12
+   highspeed      0.000     0.000     0.000        15
+        htcp      0.923     0.462     0.615        26
+       hybla      0.222     0.462     0.300        13
+    illinois      0.000     0.000     0.000        12
+          lp      0.000     0.000     0.000        12
+          nv      0.192     0.417     0.263        12
+        reno      0.143     0.083     0.105        12
+    scalable      0.000     0.000     0.000        12
+       vegas      0.667     0.500     0.571        12
+        veno      0.591     1.000     0.743        13
+    westwood      0.000     0.000     0.000        12
+        yeah      0.000     0.000     0.000        12
+
+    accuracy                          0.289       242
+   macro avg      0.223     0.267     0.216       242
+weighted avg      0.305     0.289     0.266       242

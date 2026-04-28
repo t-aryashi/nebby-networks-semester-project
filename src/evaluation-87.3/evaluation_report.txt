@@ -1,0 +1,107 @@
+Nebby Evaluation Report — Dual Profile
+============================================================
+
+TRACE-LEVEL ACCURACY : 58/65 = 89.2%
+
+  FILE                                             TRUE         PRED          CONF  OK?
+  ──────────────────────────────────────────────── ──────────── ──────────── ─────  ───
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777348776_tcp.csv bbr          bbr          100%  ✓
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777348951_tcp.csv bbr          bbr          100%  ✓
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777353526_tcp.csv bbr          bbr          100%  ✓
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777353710_tcp.csv bbr          bbr          100%  ✓
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777359307_tcp.csv bbr          bbr          100%  ✓
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777359484_tcp.csv bbr          bbr          100%  ✓
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777364619_tcp.csv bbr          bbr          100%  ✓
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777364803_tcp.csv bbr          bbr          100%  ✓
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777370602_tcp.csv bbr          bbr          100%  ✓
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777370822_tcp.csv bbr          bbr          100%  ✓
+  cc-bic_aqm-droptail_bw-2000_buf-20_1777349122_tcp.csv bic          cubic        100%  ✗
+  cc-bic_aqm-droptail_bw-2000_buf-20_1777353891_tcp.csv bic          bic          100%  ✓
+  cc-bic_aqm-droptail_bw-2000_buf-20_1777359656_tcp.csv bic          bic          100%  ✓
+  cc-bic_aqm-droptail_bw-2000_buf-20_1777364979_tcp.csv bic          bic          100%  ✓
+  cc-bic_aqm-droptail_bw-2000_buf-20_1777371043_tcp.csv bic          cubic        100%  ✗
+  cc-cubic_aqm-droptail_bw-2000_buf-20_1777347738_tcp.csv cubic        cubic        100%  ✓
+  cc-cubic_aqm-droptail_bw-2000_buf-20_1777352697_tcp.csv cubic        veno         100%  ✗
+  cc-cubic_aqm-droptail_bw-2000_buf-20_1777358955_tcp.csv cubic        cubic        100%  ✓
+  cc-cubic_aqm-droptail_bw-2000_buf-20_1777364261_tcp.csv cubic        cubic        100%  ✓
+  cc-cubic_aqm-droptail_bw-2000_buf-20_1777370202_tcp.csv cubic        cubic        100%  ✓
+  cc-htcp_aqm-droptail_bw-2000_buf-20_1777349469_tcp.csv htcp         htcp         100%  ✓
+  cc-htcp_aqm-droptail_bw-2000_buf-20_1777354267_tcp.csv htcp         htcp         100%  ✓
+  cc-htcp_aqm-droptail_bw-2000_buf-20_1777359998_tcp.csv htcp         htcp         100%  ✓
+  cc-htcp_aqm-droptail_bw-2000_buf-20_1777365346_tcp.csv htcp         bic          100%  ✗
+  cc-htcp_aqm-droptail_bw-2000_buf-20_1777371470_tcp.csv htcp         htcp         100%  ✓
+  cc-hybla_aqm-droptail_bw-2000_buf-20_1777349818_tcp.csv hybla        hybla        100%  ✓
+  cc-hybla_aqm-droptail_bw-2000_buf-20_1777354622_tcp.csv hybla        hybla        100%  ✓
+  cc-hybla_aqm-droptail_bw-2000_buf-20_1777360351_tcp.csv hybla        hybla        100%  ✓
+  cc-hybla_aqm-droptail_bw-2000_buf-20_1777365694_tcp.csv hybla        hybla        100%  ✓
+  cc-hybla_aqm-droptail_bw-2000_buf-20_1777371868_tcp.csv hybla        hybla        100%  ✓
+  cc-illinois_aqm-droptail_bw-2000_buf-20_1777350170_tcp.csv illinois     cubic        100%  ✗
+  cc-illinois_aqm-droptail_bw-2000_buf-20_1777354991_tcp.csv illinois     reno         100%  ✗
+  cc-illinois_aqm-droptail_bw-2000_buf-20_1777360721_tcp.csv illinois     veno         100%  ✗
+  cc-illinois_aqm-droptail_bw-2000_buf-20_1777366050_tcp.csv illinois     illinois     100%  ✓
+  cc-illinois_aqm-droptail_bw-2000_buf-20_1777372271_tcp.csv illinois     illinois     100%  ✓
+  cc-reno_aqm-droptail_bw-2000_buf-20_1777347366_tcp.csv reno         reno         100%  ✓
+  cc-reno_aqm-droptail_bw-2000_buf-20_1777352363_tcp.csv reno         reno         100%  ✓
+  cc-reno_aqm-droptail_bw-2000_buf-20_1777358601_tcp.csv reno         reno         100%  ✓
+  cc-reno_aqm-droptail_bw-2000_buf-20_1777363881_tcp.csv reno         reno         100%  ✓
+  cc-reno_aqm-droptail_bw-2000_buf-20_1777369805_tcp.csv reno         reno         100%  ✓
+  cc-scalable_aqm-droptail_bw-2000_buf-20_1777350525_tcp.csv scalable     scalable     100%  ✓
+  cc-scalable_aqm-droptail_bw-2000_buf-20_1777355353_tcp.csv scalable     scalable     100%  ✓
+  cc-scalable_aqm-droptail_bw-2000_buf-20_1777361294_tcp.csv scalable     scalable     100%  ✓
+  cc-scalable_aqm-droptail_bw-2000_buf-20_1777366410_tcp.csv scalable     scalable     100%  ✓
+  cc-scalable_aqm-droptail_bw-2000_buf-20_1777372667_tcp.csv scalable     scalable     100%  ✓
+  cc-vegas_aqm-droptail_bw-2000_buf-20_1777350876_tcp.csv vegas        vegas        100%  ✓
+  cc-vegas_aqm-droptail_bw-2000_buf-20_1777355709_tcp.csv vegas        vegas        100%  ✓
+  cc-vegas_aqm-droptail_bw-2000_buf-20_1777361661_tcp.csv vegas        vegas        100%  ✓
+  cc-vegas_aqm-droptail_bw-2000_buf-20_1777366769_tcp.csv vegas        vegas        100%  ✓
+  cc-vegas_aqm-droptail_bw-2000_buf-20_1777373064_tcp.csv vegas        vegas        100%  ✓
+  cc-veno_aqm-droptail_bw-2000_buf-20_1777351223_tcp.csv veno         veno         100%  ✓
+  cc-veno_aqm-droptail_bw-2000_buf-20_1777356055_tcp.csv veno         veno         100%  ✓
+  cc-veno_aqm-droptail_bw-2000_buf-20_1777362033_tcp.csv veno         veno         100%  ✓
+  cc-veno_aqm-droptail_bw-2000_buf-20_1777362669_tcp.csv veno         veno         100%  ✓
+  cc-veno_aqm-droptail_bw-2000_buf-20_1777367323_tcp.csv veno         veno         100%  ✓
+  cc-westwood_aqm-droptail_bw-2000_buf-20_1777351573_tcp.csv westwood     westwood     100%  ✓
+  cc-westwood_aqm-droptail_bw-2000_buf-20_1777356405_tcp.csv westwood     westwood     100%  ✓
+  cc-westwood_aqm-droptail_bw-2000_buf-20_1777362859_tcp.csv westwood     westwood     100%  ✓
+  cc-westwood_aqm-droptail_bw-2000_buf-20_1777367505_tcp.csv westwood     westwood     100%  ✓
+  cc-westwood_aqm-droptail_bw-2000_buf-20_1777373874_tcp.csv westwood     westwood     100%  ✓
+  cc-yeah_aqm-droptail_bw-2000_buf-20_1777351932_tcp.csv yeah         yeah         100%  ✓
+  cc-yeah_aqm-droptail_bw-2000_buf-20_1777356760_tcp.csv yeah         yeah         100%  ✓
+  cc-yeah_aqm-droptail_bw-2000_buf-20_1777363244_tcp.csv yeah         yeah         100%  ✓
+  cc-yeah_aqm-droptail_bw-2000_buf-20_1777367878_tcp.csv yeah         yeah         100%  ✓
+  cc-yeah_aqm-droptail_bw-2000_buf-20_1777374309_tcp.csv yeah         yeah         100%  ✓
+
+PER-CLASS TRACE ACCURACY:
+  bbr            : 10/10 = 100%  ██████████
+  bic            : 3/5 = 60%  ███░░
+  cubic          : 4/5 = 80%  ████░
+  htcp           : 4/5 = 80%  ████░
+  hybla          : 5/5 = 100%  █████
+  illinois       : 2/5 = 40%  ██░░░
+  reno           : 5/5 = 100%  █████
+  scalable       : 5/5 = 100%  █████
+  vegas          : 5/5 = 100%  █████
+  veno           : 5/5 = 100%  █████
+  westwood       : 5/5 = 100%  █████
+  yeah           : 5/5 = 100%  █████
+
+SEGMENT-LEVEL ACCURACY (GNB only): 87.3%  (48/55)
+
+SEGMENT CLASSIFICATION REPORT:
+              precision    recall  f1-score   support
+
+         bic      0.750     0.600     0.667         5
+       cubic      0.571     0.800     0.667         5
+        htcp      1.000     0.800     0.889         5
+       hybla      1.000     1.000     1.000         5
+    illinois      1.000     0.400     0.571         5
+        reno      0.833     1.000     0.909         5
+    scalable      1.000     1.000     1.000         5
+       vegas      1.000     1.000     1.000         5
+        veno      0.714     1.000     0.833         5
+    westwood      1.000     1.000     1.000         5
+        yeah      1.000     1.000     1.000         5
+
+    accuracy                          0.873        55
+   macro avg      0.897     0.873     0.867        55
+weighted avg      0.897     0.873     0.867        55

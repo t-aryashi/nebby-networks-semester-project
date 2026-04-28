@@ -1,0 +1,199 @@
+10.0.0.2 - - [28/Apr/2026 03:29:45] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 03:35:19] "GET /10MB.zip HTTP/1.1" 200 -
+----------------------------------------
+Exception occurred during processing of request from ('10.0.0.2', 53848)
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/socketserver.py", line 692, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.12/http/server.py", line 1311, in finish_request
+    self.RequestHandlerClass(request, client_address, self,
+  File "/usr/lib/python3.12/http/server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/usr/lib/python3.12/http/server.py", line 679, in do_GET
+    self.copyfile(f, self.wfile)
+  File "/usr/lib/python3.12/http/server.py", line 878, in copyfile
+    shutil.copyfileobj(source, outputfile)
+  File "/usr/lib/python3.12/shutil.py", line 204, in copyfileobj
+    fdst_write(buf)
+  File "/usr/lib/python3.12/socketserver.py", line 840, in write
+    self._sock.sendall(b)
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+10.0.0.2 - - [28/Apr/2026 03:38:22] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 03:41:31] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 03:44:38] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 03:47:43] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 03:58:47] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:01:41] "GET /10MB.zip HTTP/1.1" 200 -
+----------------------------------------
+Exception occurred during processing of request from ('10.0.0.2', 48552)
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/socketserver.py", line 692, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.12/http/server.py", line 1311, in finish_request
+    self.RequestHandlerClass(request, client_address, self,
+  File "/usr/lib/python3.12/http/server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/usr/lib/python3.12/http/server.py", line 679, in do_GET
+    self.copyfile(f, self.wfile)
+  File "/usr/lib/python3.12/http/server.py", line 878, in copyfile
+    shutil.copyfileobj(source, outputfile)
+  File "/usr/lib/python3.12/shutil.py", line 204, in copyfileobj
+    fdst_write(buf)
+  File "/usr/lib/python3.12/socketserver.py", line 840, in write
+    self._sock.sendall(b)
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+10.0.0.2 - - [28/Apr/2026 04:04:35] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:07:25] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:10:22] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:13:16] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:16:10] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:19:03] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:22:02] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:25:09] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:27:58] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:30:57] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:33:49] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:36:43] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:39:36] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:42:25] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:45:24] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:48:22] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:51:25] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:54:20] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 04:58:36] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 05:01:25] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 05:04:10] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 05:15:04] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 05:17:58] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 05:20:59] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 05:24:04] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 05:27:08] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 05:30:20] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 05:33:16] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 05:36:11] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 05:39:19] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 05:42:24] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 05:45:23] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 05:48:19] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 05:51:26] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 05:54:22] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 05:57:19] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 06:00:08] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 06:03:02] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 06:05:56] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 06:08:49] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 06:11:53] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 06:14:55] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 06:36:30] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 06:45:35] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 06:48:27] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 06:51:24] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 06:54:19] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 06:57:09] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:00:09] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:02:57] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:05:51] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:08:40] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:11:44] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:14:47] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:17:54] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:20:58] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:27:26] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:30:32] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:33:34] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:36:37] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:39:45] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:42:50] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:47:21] "GET /10MB.zip HTTP/1.1" 200 -
+----------------------------------------
+Exception occurred during processing of request from ('10.0.0.2', 34734)
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/socketserver.py", line 692, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.12/http/server.py", line 1311, in finish_request
+    self.RequestHandlerClass(request, client_address, self,
+  File "/usr/lib/python3.12/http/server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/usr/lib/python3.12/http/server.py", line 679, in do_GET
+    self.copyfile(f, self.wfile)
+  File "/usr/lib/python3.12/http/server.py", line 878, in copyfile
+    shutil.copyfileobj(source, outputfile)
+  File "/usr/lib/python3.12/shutil.py", line 204, in copyfileobj
+    fdst_write(buf)
+  File "/usr/lib/python3.12/socketserver.py", line 840, in write
+    self._sock.sendall(b)
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+10.0.0.2 - - [28/Apr/2026 07:50:20] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:53:28] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:56:47] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 07:59:57] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:02:55] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:10:33] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:13:50] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:16:54] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:19:57] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:22:49] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:25:52] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:28:52] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:32:00] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:34:59] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:37:53] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:40:46] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:43:43] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:46:43] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:49:42] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:52:42] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:55:42] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 08:58:42] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 09:01:45] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 09:04:53] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 09:07:55] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 09:10:55] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 09:14:02] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 09:17:10] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 09:20:11] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 09:49:18] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 09:52:45] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 09:55:55] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 09:59:10] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 10:02:33] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 10:06:10] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 10:09:55] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 10:13:27] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 10:17:02] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 10:20:27] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 10:23:40] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 10:26:59] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 10:30:23] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 10:33:41] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 10:36:59] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 10:40:20] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 10:43:37] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 10:46:55] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 10:50:16] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 10:53:35] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 10:57:04] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 11:00:58] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 11:04:21] "GET /10MB.zip HTTP/1.1" 200 -
+10.0.0.2 - - [28/Apr/2026 11:07:35] "GET /10MB.zip HTTP/1.1" 200 -

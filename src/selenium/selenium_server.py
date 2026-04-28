@@ -42,12 +42,12 @@ def create_assets(asset_dir):
     os.makedirs(asset_dir, exist_ok=True)
 
     assets = {
-        'video.bin':   5 * 1024 * 1024,   # 5MB  — video chunk
-        'style.css':   200 * 1024,          # 200KB — CSS
-        'script.js':   200 * 1024,          # 200KB — JS
-        'image1.bin':  500 * 1024,          # 500KB — image
-        'image2.bin':  500 * 1024,          # 500KB — image
-        'font.bin':    100 * 1024,          # 100KB — font
+        'video.bin':   20 * 1024 * 1024,   # 20MB
+        'style.css':   2 * 1024 * 1024,    # 2MB
+        'script.js':   2 * 1024 * 1024,
+        'image1.bin':  3 * 1024 * 1024,
+        'image2.bin':  3 * 1024 * 1024,
+        'font.bin':    1 * 1024 * 1024,
     }
 
     for fname, size in assets.items():

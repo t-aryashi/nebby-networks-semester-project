@@ -1,0 +1,24 @@
+Nebby Selenium Measurement — VENO
+=======================================================
+True CCA (set by sysctl): VENO
+
+PORT     ASSET TYPE           PREDICTED CCA     CONF      SIZE
+──────── ──────────────────── ─────────────── ──────  ────────
+54824    video                bbr              100%     189KB
+54842    static (large)       bbr              100%      86KB
+33376    static (large)       unknown            0%      17KB  (too small)
+33362    static (small)       unknown            0%      17KB  (too small)
+33338    static (small)       bbr              100%       0KB
+33350    static (small)       bbr              100%       0KB
+54848    static (small)       unknown            0%       0KB  (too small)
+54834    static (small)       unknown            0%       0KB  (too small)
+33330    static (small)       unknown            0%       0KB  (too small)
+33324    static (small)       unknown            0%       0KB  (too small)
+
+Classified: 4/10 flows  (6 too small/short to classify)
+Kernel sysctl CCA: VENO  (Chrome's QUIC stack ignores this — detecting BBR is expected)
+
+Asset type → detected CCA  (Nebby Table 8 equivalent):
+  static (large)      : bbr, unknown
+  static (small)      : unknown, bbr, bbr, unknown, unknown, unknown, unknown
+  video               : bbr

@@ -1,0 +1,26 @@
+Nebby Selenium Measurement — BIC
+=======================================================
+True CCA (set by sysctl): BIC
+
+PORT     ASSET TYPE           PREDICTED CCA     CONF      SIZE
+──────── ──────────────────── ─────────────── ──────  ────────
+48278    video                bbr              100%     221KB
+47024    static (large)       bbr              100%      83KB
+48254    static (large)       unknown            0%      17KB  (too small)
+48268    static (small)       unknown            0%      17KB  (too small)
+53348    static (small)       bbr              100%       0KB
+48244    static (small)       bbr              100%       0KB
+53344    static (small)       unknown            0%       0KB  (too small)
+48228    static (small)       unknown            0%       0KB  (too small)
+48224    static (small)       unknown            0%       0KB  (too small)
+48214    static (small)       unknown            0%       0KB  (too small)
+47030    static (small)       unknown            0%       0KB  (too small)
+47018    static (small)       unknown            0%       0KB  (too small)
+
+Classified: 4/12 flows  (8 too small/short to classify)
+Kernel sysctl CCA: BIC  (Chrome's QUIC stack ignores this — detecting BBR is expected)
+
+Asset type → detected CCA  (Nebby Table 8 equivalent):
+  static (large)      : bbr, unknown
+  static (small)      : unknown, bbr, bbr, unknown, unknown, unknown, unknown, unknown, unknown
+  video               : bbr

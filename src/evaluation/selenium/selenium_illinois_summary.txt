@@ -1,0 +1,24 @@
+Nebby Selenium Measurement — ILLINOIS
+=======================================================
+True CCA (set by sysctl): ILLINOIS
+
+PORT     ASSET TYPE           PREDICTED CCA     CONF      SIZE
+──────── ──────────────────── ─────────────── ──────  ────────
+39100    video                bbr              100%     165KB
+50336    static (large)       bbr              100%      82KB
+39096    static (large)       unknown            0%      17KB  (too small)
+39086    static (small)       unknown            0%      17KB  (too small)
+39070    static (small)       bbr              100%       0KB
+39066    static (small)       bbr              100%       0KB
+50352    static (small)       unknown            0%       0KB  (too small)
+50326    static (small)       unknown            0%       0KB  (too small)
+39112    static (small)       unknown            0%       0KB  (too small)
+39054    static (small)       unknown            0%       0KB  (too small)
+
+Classified: 4/10 flows  (6 too small/short to classify)
+Kernel sysctl CCA: ILLINOIS  (Chrome's QUIC stack ignores this — detecting BBR is expected)
+
+Asset type → detected CCA  (Nebby Table 8 equivalent):
+  static (large)      : bbr, unknown
+  static (small)      : unknown, bbr, bbr, unknown, unknown, unknown, unknown
+  video               : bbr

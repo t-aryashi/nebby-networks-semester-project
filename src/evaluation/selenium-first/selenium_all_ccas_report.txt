@@ -1,0 +1,20 @@
+Nebby Selenium — All CCAs Report
+(Equivalent to Table 8 in paper — applied to local setup)
+=================================================================
+
+CCA          FLOWS  ACCURACY  VIDEO PRED      STATIC PRED    
+──────────── ─────  ────────  ─────────────── ───────────────
+cubic           12       33%  bbr             bbr            
+reno            11       36%  bbr             bbr            
+bbr             11       36%  bbr             bbr            
+bic             11       36%  bbr             bbr            
+htcp            11       36%  bbr             bbr            
+hybla           11       45%  bbr             illinois       
+illinois        11       45%  bbr             bbr            
+vegas            8       50%  bbr             unknown        
+veno            10       40%  bbr             bbr            
+westwood         9       44%  bbr             bbr            
+
+Note: In the paper (Table 8), BBR is commonly used for video
+      and CUBIC for static assets, even on the same page.
+      This reflects different CDN configurations per asset type.

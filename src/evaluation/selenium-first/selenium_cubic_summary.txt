@@ -1,0 +1,26 @@
+Nebby Selenium Measurement — CUBIC
+=======================================================
+True CCA (set by sysctl): CUBIC
+
+PORT     ASSET TYPE           PREDICTED CCA     CONF      SIZE
+──────── ──────────────────── ─────────────── ──────  ────────
+33658    video                bbr              100%     223KB
+33640    static (large)       bbr              100%     143KB
+55860    static (large)       unknown            0%      20KB  (too small)
+55870    static (small)       unknown            0%      17KB  (too small)
+55856    static (small)       bbr              100%       0KB
+55858    static (small)       bbr              100%       0KB
+55878    static (small)       unknown            0%       0KB  (too small)
+55844    static (small)       unknown            0%       0KB  (too small)
+55830    static (small)       unknown            0%       0KB  (too small)
+55826    static (small)       unknown            0%       0KB  (too small)
+33668    static (small)       unknown            0%       0KB  (too small)
+33648    static (small)       unknown            0%       0KB  (too small)
+
+Classified: 4/12 flows  (8 too small/short to classify)
+Kernel sysctl CCA: CUBIC  (Chrome's QUIC stack ignores this — detecting BBR is expected)
+
+Asset type → detected CCA  (Nebby Table 8 equivalent):
+  static (large)      : bbr, unknown
+  static (small)      : unknown, bbr, bbr, unknown, unknown, unknown, unknown, unknown, unknown
+  video               : bbr

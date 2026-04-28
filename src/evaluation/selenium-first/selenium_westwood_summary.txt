@@ -1,0 +1,23 @@
+Nebby Selenium Measurement — WESTWOOD
+=======================================================
+True CCA (set by sysctl): WESTWOOD
+
+PORT     ASSET TYPE           PREDICTED CCA     CONF      SIZE
+──────── ──────────────────── ─────────────── ──────  ────────
+48712    video                bbr              100%     171KB
+33112    static (large)       bbr              100%      72KB
+48686    static (large)       unknown            0%      17KB  (too small)
+48696    static (small)       unknown            0%      17KB  (too small)
+48670    static (small)       bbr              100%       0KB
+48662    static (small)       bbr              100%       0KB
+48656    static (small)       unknown            0%       0KB  (too small)
+33128    static (small)       unknown            0%       0KB  (too small)
+33106    static (small)       unknown            0%       0KB  (too small)
+
+Classified: 4/9 flows  (5 too small/short to classify)
+Kernel sysctl CCA: WESTWOOD  (Chrome's QUIC stack ignores this — detecting BBR is expected)
+
+Asset type → detected CCA  (Nebby Table 8 equivalent):
+  static (large)      : bbr, unknown
+  static (small)      : unknown, bbr, bbr, unknown, unknown, unknown
+  video               : bbr

@@ -99,33 +99,57 @@ def load_both(csv_path, server_ip=SERVER_IP, rtt_s=RTT_S):
     t_cwnd, cwnd_smooth: smoothed cwnd proxy trace
     meta               : dict with cc, bw, etc.
     """
-    df = pd.read_csv(csv_path)
+    df=pd.read_csv(csv_path, engine='python')
     df.columns = df.columns.str.strip()
+        # --- FIX: adapt tshark/wireshark CSV format ---
+    df = df.rename(columns={
+        "frame.time_relative": "time",
+        "ip.src": "src_ip",
+        "tcp.seq": "seq",
+        "tcp.ack": "ack",
+        "tcp.len": "length",
+        "tcp.window_size": "window"
+    })
 
-    needed = ['frame.time_relative', 'ip.src', 'tcp.len',
-              'tcp.seq', 'tcp.ack']
-    has_window = 'tcp.window_size' in df.columns
+    # Drop rows where critical fields are missing
+    df = df.dropna(subset=["time", "src_ip", "seq", "ack"])
 
-    for col in needed + (['tcp.window_size'] if has_window else []):
+    # Infer direction (sender vs receiver)
+    if "direction" not in df.columns:
+        sender_ip = df["src_ip"].mode()[0]
+        df["direction"] = df["src_ip"].apply(
+            lambda x: "out" if x == sender_ip else "in"
+        )
+
+    # Optional: ensure numeric types
+    df["time"] = pd.to_numeric(df["time"], errors="coerce")
+    df["seq"] = pd.to_numeric(df["seq"], errors="coerce")
+    df["ack"] = pd.to_numeric(df["ack"], errors="coerce")
+    df["length"] = pd.to_numeric(df["length"], errors="coerce").fillna(0)
+
+    needed = ['time', 'src_ip', 'length', 'seq', 'ack']
+    has_window = 'window' in df.columns
+
+    for col in needed + (['window'] if has_window else []):
         df[col] = pd.to_numeric(df[col], errors='coerce')
 
-    df = df.dropna(subset=['frame.time_relative', 'ip.src'])
-    df = df.sort_values('frame.time_relative').reset_index(drop=True)
+    df = df.dropna(subset=['time', 'src_ip'])
+    df = df.sort_values('time').reset_index(drop=True)
 
-    srv = df[df['ip.src'] == server_ip].copy()
-    cli = df[df['ip.src'] != server_ip].copy()
+    srv = df[df['src_ip'] == server_ip].copy()
+    cli = df[df['src_ip'] != server_ip].copy()
 
     if srv.empty or cli.empty:
         raise ValueError(f"Missing direction in {csv_path}")
 
     # ── BiF ───────────────────────────────────────────────────────────────
-    srv['seq_end']     = srv['tcp.seq'] + srv['tcp.len']
+    srv['seq_end'] = srv['seq'] + srv['length']
     srv['max_seq_end'] = srv['seq_end'].cummax()
-    cli['max_ack']     = cli['tcp.ack'].cummax()
+    cli['max_ack'] = cli['ack'].cummax()
 
-    t_bif = srv['frame.time_relative'].values
+    t_bif = srv['time'].values
     msa   = np.interp(t_bif,
-                      cli['frame.time_relative'].values,
+                      cli['time'].values,
                       cli['max_ack'].values,
                       left=cli['max_ack'].values[0],
                       right=cli['max_ack'].values[-1])
@@ -139,10 +163,10 @@ def load_both(csv_path, server_ip=SERVER_IP, rtt_s=RTT_S):
     # This is what Gordon and Inspector Gadget measure (indirectly via cwnd
     # inference from packet drops and ACK counting).
     if has_window:
-        cli_w = cli.dropna(subset=['tcp.window_size']).copy()
+        cli_w = cli.dropna(subset=['window']).copy()
         if not cli_w.empty:
-            t_cwnd      = cli_w['frame.time_relative'].values
-            cwnd_raw    = cli_w['tcp.window_size'].values.astype(float)
+            t_cwnd      = cli_w['time'].values
+            cwnd_raw    = cli_w['window'].values.astype(float)
             # Smooth to match BiF smoothing
             _, cwnd_smooth = smooth_bif(t_cwnd, cwnd_raw, rtt_s)
         else:

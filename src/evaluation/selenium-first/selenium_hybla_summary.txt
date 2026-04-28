@@ -1,0 +1,25 @@
+Nebby Selenium Measurement — HYBLA
+=======================================================
+True CCA (set by sysctl): HYBLA
+
+PORT     ASSET TYPE           PREDICTED CCA     CONF      SIZE
+──────── ──────────────────── ─────────────── ──────  ────────
+60522    video                bbr              100%     192KB
+60502    static (large)       illinois         100%      23KB
+60508    static (large)       unknown            0%      17KB  (too small)
+60528    static (small)       bbr              100%       4KB
+60460    static (small)       bbr              100%       0KB
+60496    static (small)       bbr              100%       0KB
+60480    static (small)       unknown            0%       0KB  (too small)
+60470    static (small)       unknown            0%       0KB  (too small)
+60462    static (small)       unknown            0%       0KB  (too small)
+60446    static (small)       unknown            0%       0KB  (too small)
+43914    static (small)       unknown            0%       0KB  (too small)
+
+Classified: 5/11 flows  (6 too small/short to classify)
+Kernel sysctl CCA: HYBLA  (Chrome's QUIC stack ignores this — detecting BBR is expected)
+
+Asset type → detected CCA  (Nebby Table 8 equivalent):
+  static (large)      : illinois, unknown
+  static (small)      : bbr, bbr, bbr, unknown, unknown, unknown, unknown, unknown
+  video               : bbr

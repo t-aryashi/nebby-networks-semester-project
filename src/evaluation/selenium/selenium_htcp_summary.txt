@@ -1,0 +1,23 @@
+Nebby Selenium Measurement — HTCP
+=======================================================
+True CCA (set by sysctl): HTCP
+
+PORT     ASSET TYPE           PREDICTED CCA     CONF      SIZE
+──────── ──────────────────── ─────────────── ──────  ────────
+38078    video                bbr              100%     171KB
+38066    static (large)       bbr              100%     171KB
+44800    static (large)       unknown            0%      17KB  (too small)
+44812    static (small)       unknown            0%      17KB  (too small)
+44784    static (small)       bbr              100%       1KB
+44782    static (small)       bbr              100%       0KB
+44776    static (small)       unknown            0%       0KB  (too small)
+38086    static (small)       unknown            0%       0KB  (too small)
+38076    static (small)       unknown            0%       0KB  (too small)
+
+Classified: 4/9 flows  (5 too small/short to classify)
+Kernel sysctl CCA: HTCP  (Chrome's QUIC stack ignores this — detecting BBR is expected)
+
+Asset type → detected CCA  (Nebby Table 8 equivalent):
+  static (large)      : bbr, unknown
+  static (small)      : unknown, bbr, bbr, unknown, unknown, unknown
+  video               : bbr

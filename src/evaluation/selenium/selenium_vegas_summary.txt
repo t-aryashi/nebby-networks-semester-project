@@ -1,0 +1,26 @@
+Nebby Selenium Measurement — VEGAS
+=======================================================
+True CCA (set by sysctl): VEGAS
+
+PORT     ASSET TYPE           PREDICTED CCA     CONF      SIZE
+──────── ──────────────────── ─────────────── ──────  ────────
+46944    video                bbr              100%     195KB
+48910    static (large)       bbr              100%      82KB
+46932    static (large)       unknown            0%      17KB  (too small)
+46928    static (small)       unknown            0%      17KB  (too small)
+46880    static (small)       bbr              100%       1KB
+46922    static (small)       bbr              100%       0KB
+48922    static (small)       unknown            0%       0KB  (too small)
+48896    static (small)       unknown            0%       0KB  (too small)
+46912    static (small)       unknown            0%       0KB  (too small)
+46904    static (small)       unknown            0%       0KB  (too small)
+46888    static (small)       unknown            0%       0KB  (too small)
+46872    static (small)       unknown            0%       0KB  (too small)
+
+Classified: 4/12 flows  (8 too small/short to classify)
+Kernel sysctl CCA: VEGAS  (Chrome's QUIC stack ignores this — detecting BBR is expected)
+
+Asset type → detected CCA  (Nebby Table 8 equivalent):
+  static (large)      : bbr, unknown
+  static (small)      : unknown, bbr, bbr, unknown, unknown, unknown, unknown, unknown, unknown
+  video               : bbr

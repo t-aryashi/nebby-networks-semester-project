@@ -127,17 +127,18 @@ def load_both(csv_path, server_ip=SERVER_IP, rtt_s=RTT_S):
     df["ack"] = pd.to_numeric(df["ack"], errors="coerce")
     df["length"] = pd.to_numeric(df["length"], errors="coerce").fillna(0)
 
-    needed = ['time', 'src_ip', 'length', 'seq', 'ack']
+    needed = ['time', 'length', 'seq', 'ack']   # src_ip is a string — never coerce it
     has_window = 'window' in df.columns
 
     for col in needed + (['window'] if has_window else []):
         df[col] = pd.to_numeric(df[col], errors='coerce')
 
-    df = df.dropna(subset=['time', 'src_ip'])
+    df = df.dropna(subset=['time'])              # only drop rows missing time, not src_ip
     df = df.sort_values('time').reset_index(drop=True)
 
-    srv = df[df['src_ip'] == server_ip].copy()
-    cli = df[df['src_ip'] != server_ip].copy()
+    # Use the already-inferred direction column instead of a hardcoded server IP
+    srv = df[df['direction'] == 'out'].copy()    # sender packets (data flow)
+    cli = df[df['direction'] == 'in'].copy()     # receiver packets (ACKs)
 
     if srv.empty or cli.empty:
         raise ValueError(f"Missing direction in {csv_path}")

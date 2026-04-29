@@ -8,7 +8,28 @@ import pandas as pd
 from scipy.signal import butter, filtfilt
 
 
-def compute_bif(csv_path, server_ip='10.0.0.1'):
+def detect_server_ip(csv_path):
+    """
+    Auto-detect the server IP from a CSV by finding which IP sent
+    the most payload bytes (highest sum of tcp.len).
+    Used for real internet traffic where server_ip is not known in advance.
+    """
+    df = pd.read_csv(csv_path)
+    df.columns = df.columns.str.strip()
+    df['tcp.len'] = pd.to_numeric(df['tcp.len'], errors='coerce').fillna(0)
+    df = df.dropna(subset=['ip.src'])
+
+    data_pkts = df[df['tcp.len'] > 0]
+
+    if data_pkts.empty:
+        raise ValueError("No data packets found")
+
+    counts = data_pkts['ip.src'].value_counts()
+    server_ip = counts.idxmax()
+    return server_ip
+
+
+def compute_bif(csv_path, server_ip=None):
     """
     Compute raw Bytes-in-Flight from a tshark CSV.
 
@@ -33,6 +54,11 @@ def compute_bif(csv_path, server_ip='10.0.0.1'):
 
     df = df.dropna(subset=['frame.time_relative', 'ip.src'])
     df = df.sort_values('frame.time_relative').reset_index(drop=True)
+
+    # Auto-detect server IP if not provided
+    if server_ip is None:
+        server_ip = detect_server_ip(csv_path)
+        print(f"  Auto-detected server IP: {server_ip}")
 
     srv = df[df['ip.src'] == server_ip].copy()   # data packets (server → client)
     cli = df[df['ip.src'] != server_ip].copy()   # ACK  packets (client → server)

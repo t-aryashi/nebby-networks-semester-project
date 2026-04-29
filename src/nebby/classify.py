@@ -30,7 +30,7 @@ from features   import (extract_features,
 
 # ── config ────────────────────────────────────────────────────────────────────
 MODEL_DIR = '../models'
-SERVER_IP = '10.0.0.1'
+SERVER_IP = None
 RTT_S     = 0.1   # seconds (used only for single-profile fallback)
 
 RATE_BASED_CCAS = {'bbr', 'bbr2', 'bbr3'}
@@ -165,7 +165,7 @@ def _majority_vote(preds, le):
     return label, confidence
 
 
-def _check_bbr(csv_path, server_ip=SERVER_IP, rtt_s=RTT_S):
+def _check_bbr(csv_path, server_ip=None, rtt_s=RTT_S):
     """Run BBR rule detector on a single CSV. Returns 'bbr' or None."""
     t, bif         = compute_bif(csv_path, server_ip)
     t_s, bif_s     = smooth_bif(t, bif, rtt_s)
@@ -229,7 +229,7 @@ def classify_trace_pair(csv_50ms, csv_100ms,
 # FALLBACK: single-profile classification  (3D features)
 # ══════════════════════════════════════════════════════════════════════════════
 
-def classify_trace(csv_path, server_ip=SERVER_IP, rtt_s=RTT_S, verbose=True):
+def classify_trace(csv_path, server_ip=None, rtt_s=RTT_S, verbose=True):
     """
     Classify using a single CSV — 3D feature vector.
 

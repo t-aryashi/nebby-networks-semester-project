@@ -1,24 +1,18 @@
-Nebby Selenium Measurement — ILLINOIS
-=======================================================
-True CCA (set by sysctl): ILLINOIS
+Nebby Selenium — ILLINOIS  (QUIC disabled, TCP only)
+============================================================
+True CCA (kernel sysctl): ILLINOIS
 
-PORT     ASSET TYPE           PREDICTED CCA     CONF      SIZE
-──────── ──────────────────── ─────────────── ──────  ────────
-39100    video                bbr              100%     165KB
-50336    static (large)       bbr              100%      82KB
-39096    static (large)       unknown            0%      17KB  (too small)
-39086    static (small)       unknown            0%      17KB  (too small)
-39070    static (small)       bbr              100%       0KB
-39066    static (small)       bbr              100%       0KB
-50352    static (small)       unknown            0%       0KB  (too small)
-50326    static (small)       unknown            0%       0KB  (too small)
-39112    static (small)       unknown            0%       0KB  (too small)
-39054    static (small)       unknown            0%       0KB  (too small)
+PORT     ASSET TYPE           PRED CCA        CONF      SIZE  CORRECT?
+─────────────────────────────────────────────────────────────────
+55646    video                veno           100%    5120KB  ✗
+44940    static (large)       vegas          100%    2072KB  ✗
+44914    static (large)       reno           100%     200KB  ✗
+44898    static (small)       illinois       100%     200KB  ✓
 
-Classified: 4/10 flows  (6 too small/short to classify)
-Kernel sysctl CCA: ILLINOIS  (Chrome's QUIC stack ignores this — detecting BBR is expected)
+Classifiable flows : 4/4
+Correct predictions: 1/4 = 25%
 
-Asset type → detected CCA  (Nebby Table 8 equivalent):
-  static (large)      : bbr, unknown
-  static (small)      : unknown, bbr, bbr, unknown, unknown, unknown, unknown
-  video               : bbr
+Asset type → CCA mapping (Nebby Table 8 equivalent):
+  static (large)        : vegas  (from 2 classified flows)
+  static (small)        : illinois  (from 1 classified flows)
+  video                 : veno  (from 1 classified flows)

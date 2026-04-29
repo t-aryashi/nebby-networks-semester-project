@@ -1,22 +1,18 @@
-Nebby Selenium Measurement — CUBIC
-=======================================================
-True CCA (set by sysctl): CUBIC
+Nebby Selenium — CUBIC  (QUIC disabled, TCP only)
+============================================================
+True CCA (kernel sysctl): CUBIC
 
-PORT     ASSET TYPE           PREDICTED CCA     CONF      SIZE
-──────── ──────────────────── ─────────────── ──────  ────────
-36030    video                bbr              100%     146KB
-49992    static (large)       bbr              100%      69KB
-36016    static (large)       hybla            100%       0KB
-36024    static (small)       bbr              100%       0KB
-49998    static (small)       unknown            0%       0KB  (too small)
-49990    static (small)       unknown            0%       0KB  (too small)
-36028    static (small)       unknown            0%       0KB  (too small)
-36026    static (small)       unknown            0%       0KB  (too small)
+PORT     ASSET TYPE           PRED CCA        CONF      SIZE  CORRECT?
+─────────────────────────────────────────────────────────────────
+36178    video                illinois       100%    1213KB  ✗
+47128    static (large)       reno           100%    1170KB  ✗
+47102    static (large)       veno           100%     200KB  ✗
+47062    static (small)       htcp           100%     200KB  ✗
 
-Classified: 4/8 flows  (4 too small/short to classify)
-Kernel sysctl CCA: CUBIC  (Chrome's QUIC stack ignores this — detecting BBR is expected)
+Classifiable flows : 4/4
+Correct predictions: 0/4 = 0%
 
-Asset type → detected CCA  (Nebby Table 8 equivalent):
-  static (large)      : bbr, hybla
-  static (small)      : bbr, unknown, unknown, unknown, unknown
-  video               : bbr
+Asset type → CCA mapping (Nebby Table 8 equivalent):
+  static (large)        : reno  (from 2 classified flows)
+  static (small)        : htcp  (from 1 classified flows)
+  video                 : illinois  (from 1 classified flows)

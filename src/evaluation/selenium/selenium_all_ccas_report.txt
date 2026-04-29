@@ -1,20 +1,21 @@
-Nebby Selenium — All CCAs Report
-(Equivalent to Table 8 in paper — applied to local setup)
+Nebby Selenium — All CCAs  (QUIC disabled, TCP forced)
+Equivalent to paper Table 8 — applied to local controlled setup
 =================================================================
 
-CCA          FLOWS  ACCURACY  VIDEO PRED      STATIC PRED    
-──────────── ─────  ────────  ─────────────── ───────────────
-cubic            8       50%  bbr             bbr            
-reno            12       33%  bbr             bbr            
-bbr             12       33%  bbr             bbr            
-bic             12       33%  bbr             bbr            
-htcp             9       44%  bbr             bbr            
-hybla            9       44%  bbr             bbr            
-illinois        10       40%  bbr             bbr            
-vegas           12       33%  bbr             bbr            
-veno            13       31%  bbr             bbr            
-westwood        14       29%  bbr             bbr            
+CCA          CLASSIFIED   CORRECT  ACCURACY  VIDEO CCA    STATIC CCA  
+─────────────────────────────────────────────────────────────────
+cubic                 4         0        0%  illinois     reno        
+reno                  4         2       50%  vegas        vegas       
+bbr                   4         0        0%  reno         veno        
+bic                   4         0        0%  veno         vegas       
+htcp                  4         0        0%  reno         vegas       
+hybla                 6         0        0%  vegas        vegas       
+illinois              4         1       25%  veno         vegas       
+vegas                 4         0        0%  veno         veno        
+veno                  4         0        0%  reno         vegas       
+westwood              4         0        0%  vegas        vegas       
 
-Note: In the paper (Table 8), BBR is commonly used for video
-      and CUBIC for static assets, even on the same page.
-      This reflects different CDN configurations per asset type.
+NOVEL CONTRIBUTION vs paper (§4.5):
+  Paper observes CCAs on real websites — cannot verify accuracy.
+  Here we SET the kernel CCA and VERIFY the prediction,
+  giving ground-truth accuracy numbers for browser measurement.

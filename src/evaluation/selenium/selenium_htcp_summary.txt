@@ -1,23 +1,18 @@
-Nebby Selenium Measurement — HTCP
-=======================================================
-True CCA (set by sysctl): HTCP
+Nebby Selenium — HTCP  (QUIC disabled, TCP only)
+============================================================
+True CCA (kernel sysctl): HTCP
 
-PORT     ASSET TYPE           PREDICTED CCA     CONF      SIZE
-──────── ──────────────────── ─────────────── ──────  ────────
-38078    video                bbr              100%     171KB
-38066    static (large)       bbr              100%     171KB
-44800    static (large)       unknown            0%      17KB  (too small)
-44812    static (small)       unknown            0%      17KB  (too small)
-44784    static (small)       bbr              100%       1KB
-44782    static (small)       bbr              100%       0KB
-44776    static (small)       unknown            0%       0KB  (too small)
-38086    static (small)       unknown            0%       0KB  (too small)
-38076    static (small)       unknown            0%       0KB  (too small)
+PORT     ASSET TYPE           PRED CCA        CONF      SIZE  CORRECT?
+─────────────────────────────────────────────────────────────────
+43084    video                reno           100%    3531KB  ✗
+35458    static (large)       vegas          100%    2083KB  ✗
+35418    static (large)       illinois       100%     200KB  ✗
+35404    static (small)       illinois       100%     200KB  ✗
 
-Classified: 4/9 flows  (5 too small/short to classify)
-Kernel sysctl CCA: HTCP  (Chrome's QUIC stack ignores this — detecting BBR is expected)
+Classifiable flows : 4/4
+Correct predictions: 0/4 = 0%
 
-Asset type → detected CCA  (Nebby Table 8 equivalent):
-  static (large)      : bbr, unknown
-  static (small)      : unknown, bbr, bbr, unknown, unknown, unknown
-  video               : bbr
+Asset type → CCA mapping (Nebby Table 8 equivalent):
+  static (large)        : vegas  (from 2 classified flows)
+  static (small)        : illinois  (from 1 classified flows)
+  video                 : reno  (from 1 classified flows)

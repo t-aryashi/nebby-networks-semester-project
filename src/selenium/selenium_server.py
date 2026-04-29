@@ -23,7 +23,7 @@ This server serves:
   /font.bin             → 100KB file       (simulates font)
 
 Usage:
-    sudo python3 selenium_server.py [--port 8080] [--dir /path/to/assets]
+    sudo python3 selenium_server.py [--port 80] [--dir /path/to/assets]
 """
 
 import os
@@ -34,7 +34,7 @@ import socketserver
 import threading
 
 ASSET_DIR  = '/tmp/nebby_assets'
-DEFAULT_PORT = 8080
+DEFAULT_PORT = 80
 
 
 def create_assets(asset_dir):
@@ -42,13 +42,19 @@ def create_assets(asset_dir):
     os.makedirs(asset_dir, exist_ok=True)
 
     assets = {
-        'video.bin':   20 * 1024 * 1024,   # 20MB
-        'style.css':   2 * 1024 * 1024,    # 2MB
-        'script.js':   2 * 1024 * 1024,
-        'image1.bin':  3 * 1024 * 1024,
-        'image2.bin':  3 * 1024 * 1024,
-        'font.bin':    1 * 1024 * 1024,
+        'video.bin':   8 * 1024 * 1024,   # 8MB  — video (long flow, ~64s at 500Kbps shared)
+        'image1.bin':  2 * 1024 * 1024,   # 2MB  — large image (~16s)
+        'image2.bin':  2 * 1024 * 1024,   # 2MB  — large image (~16s)
+        'style.css':   1 * 1024 * 1024,   # 1MB  — CSS (~8s)
+        'script.js':   1 * 1024 * 1024,   # 1MB  — JS (~8s)
+        'font.bin':    512 * 1024,         # 512KB — font (~4s)
     }
+    # WHY LARGE FILES:
+    # At 2000 Kbps shared across 4-6 concurrent Chrome connections,
+    # each flow gets ~330-500 Kbps effective bandwidth.
+    # Files need to be large enough that each flow runs for 10+ seconds
+    # to produce multiple oscillation cycles for the GNB classifier.
+    # Rule of thumb: file_size_KB > (shared_bw_kbps * 10s / 8) = 625KB minimum.
 
     for fname, size in assets.items():
         fpath = os.path.join(asset_dir, fname)

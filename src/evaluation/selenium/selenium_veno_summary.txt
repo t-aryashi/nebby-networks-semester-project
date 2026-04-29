@@ -1,27 +1,18 @@
-Nebby Selenium Measurement — VENO
-=======================================================
-True CCA (set by sysctl): VENO
+Nebby Selenium — VENO  (QUIC disabled, TCP only)
+============================================================
+True CCA (kernel sysctl): VENO
 
-PORT     ASSET TYPE           PREDICTED CCA     CONF      SIZE
-──────── ──────────────────── ─────────────── ──────  ────────
-55270    video                bbr              100%     450KB
-55248    static (large)       bbr              100%     208KB
-51898    static (large)       unknown            0%      17KB  (too small)
-51894    static (small)       unknown            0%      17KB  (too small)
-51892    static (small)       bbr              100%       0KB
-51842    static (small)       bbr              100%       0KB
-59350    static (small)       unknown            0%       0KB  (too small)
-55268    static (small)       unknown            0%       0KB  (too small)
-55262    static (small)       unknown            0%       0KB  (too small)
-51878    static (small)       unknown            0%       0KB  (too small)
-51864    static (small)       unknown            0%       0KB  (too small)
-51852    static (small)       unknown            0%       0KB  (too small)
-51836    static (small)       unknown            0%       0KB  (too small)
+PORT     ASSET TYPE           PRED CCA        CONF      SIZE  CORRECT?
+─────────────────────────────────────────────────────────────────
+38590    video                reno           100%    3449KB  ✗
+36274    static (large)       vegas          100%    2072KB  ✗
+36232    static (large)       reno           100%     200KB  ✗
+36224    static (small)       illinois       100%     200KB  ✗
 
-Classified: 4/13 flows  (9 too small/short to classify)
-Kernel sysctl CCA: VENO  (Chrome's QUIC stack ignores this — detecting BBR is expected)
+Classifiable flows : 4/4
+Correct predictions: 0/4 = 0%
 
-Asset type → detected CCA  (Nebby Table 8 equivalent):
-  static (large)      : bbr, unknown
-  static (small)      : unknown, bbr, bbr, unknown, unknown, unknown, unknown, unknown, unknown, unknown
-  video               : bbr
+Asset type → CCA mapping (Nebby Table 8 equivalent):
+  static (large)        : vegas  (from 2 classified flows)
+  static (small)        : illinois  (from 1 classified flows)
+  video                 : reno  (from 1 classified flows)

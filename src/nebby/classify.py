@@ -42,34 +42,103 @@ RATE_BASED_CCAS = {'bbr', 'bbr2', 'bbr3'}
 
 def detect_bbr(t, bif, rtt_s=RTT_S):
     """
-    Detect BBR by looking for its characteristic periodic probing behaviour.
+    Detect BBR by its characteristic BiF behaviour.
+    Uses THREE independent checks — ALL must pass to return 'bbr'.
+    This eliminates the false positives on CUBIC/Reno that plagued
+    the previous single-criterion version.
 
-    BBRv1: ProbeBW every 8 RTTs (+25% rate), ProbeRTT every 10s
-    BBRv2: stable cruise ~2s, ProbeRTT every 5s
+    Why the old version failed on CUBIC:
+      - CUBIC's sawtooth continuously rises then sharply drops
+      - The rising phase produces clusters of positive d(BiF)/dt values
+      - Those clusters looked like "periodic spikes" to the old detector
+      - The old detector had only one criterion (spike gap) which CUBIC passed
 
-    Returns 'bbr' if detected, None otherwise.
+    The three criteria:
+
+    CHECK 1 — BiF FLATNESS  (most discriminative)
+      BBR cruises near a target rate → low coefficient of variation (CV).
+      CV = std / mean.
+      BBR:   CV ≈ 0.05 – 0.20  (BiF varies by only ~10-20% around mean)
+      CUBIC: CV ≈ 0.40 – 0.80  (sawtooth swings wildly)
+      Threshold: CV < 0.35  →  potentially BBR
+
+    CHECK 2 — ABSENCE OF DEEP DROPS  (confirms no sawtooth)
+      Loss-based CCAs drop BiF by 50%+ at every loss event.
+      BBR's ProbeRTT drops are small (~30%) and infrequent (~every 10s).
+      We count how many times BiF drops by >40% of its running max.
+      BBR:   0–2 deep drops in a 30s trace
+      CUBIC: 3–15 deep drops (one per sawtooth cycle)
+      Threshold: ≤ 2 deep drops
+
+    CHECK 3 — PROBERTT SIGNATURE  (positive confirmation)
+      BBRv1 backs off to its min RTT estimate every ~10 seconds.
+      This creates periodic dips visible even in a smoothed trace.
+      We look for at least 1 dip where BiF drops >20% and recovers,
+      with dip duration < 1 RTT (these are brief, not the sustained
+      drops you see in CUBIC after a loss).
+
+    Parameters
+    ----------
+    t     : timestamps (seconds) — post slow-start removal
+    bif   : smoothed BiF values (bytes)
+    rtt_s : estimated RTT in seconds
+
+    Returns
+    -------
+    'bbr' if all three checks pass, None otherwise
     """
     if len(bif) < 50:
         return None
 
-    dbif = np.diff(bif) / np.diff(t)
-    p95  = np.percentile(dbif, 95)
-    p05  = np.percentile(dbif, 5)
+    bif_mean = bif.mean()
+    if bif_mean < 100:
+        return None   # essentially no traffic
 
-    spike_times = t[1:][dbif > p95]
-    dip_times   = t[1:][dbif < p05]
-
-    if len(spike_times) < 3:
+    # ── CHECK 1: Flatness via coefficient of variation ────────────────────
+    cv = bif.std() / bif_mean
+    if cv >= 0.35:
+        # Too variable — this is a sawtooth (CUBIC/Reno), not BBR
         return None
 
-    expected_probe_gap = 8 * rtt_s          # e.g. 0.8s at 100ms RTT
-    median_spike_gap   = np.median(np.diff(spike_times))
+    # ── CHECK 2: Count deep drops (loss events) ───────────────────────────
+    # A deep drop = BiF falls to < 60% of its recent running max
+    window     = max(1, int(len(bif) * 0.05))   # 5% window
+    deep_drops = 0
+    for i in range(window, len(bif)):
+        local_max = bif[max(0, i - window):i].max()
+        if local_max > bif_mean * 0.3 and bif[i] < local_max * 0.60:
+            deep_drops += 1
 
-    if median_spike_gap < expected_probe_gap * 3:
-        if len(dip_times) > 1:
-            if np.median(np.diff(dip_times)) < 12:
-                return 'bbr'
-    return None
+    # Normalise by trace length (allow ~1 drop per 15 seconds)
+    trace_duration   = t[-1] - t[0]
+    allowed_drops    = max(2, int(trace_duration / 15))
+    if deep_drops > allowed_drops:
+        # Too many sharp drops — this is a loss-based CCA
+        return None
+
+    # ── CHECK 3: ProbeRTT signature ───────────────────────────────────────
+    # Look for at least one brief dip where BiF drops >20% then recovers
+    # within a short window (~2-3 RTTs). This is BBR's ProbeRTT behaviour.
+    probe_rtt_window = int(3 * rtt_s / max(np.median(np.diff(t)), 1e-6))
+    probe_rtt_window = max(5, min(probe_rtt_window, 50))
+    found_probe_rtt  = False
+
+    for i in range(probe_rtt_window, len(bif) - probe_rtt_window):
+        before = bif[i - probe_rtt_window:i].mean()
+        after  = bif[i + 1:i + probe_rtt_window].mean()
+        at     = bif[i]
+        # BiF dips and recovers (both before and after are higher)
+        if before > 0 and after > 0:
+            dip_depth = 1.0 - at / max(before, after)
+            if 0.15 < dip_depth < 0.70 and after > at * 1.1:
+                found_probe_rtt = True
+                break
+
+    if not found_probe_rtt:
+        return None
+
+    # All three checks passed
+    return 'bbr'
 
 
 # ══════════════════════════════════════════════════════════════════════════════

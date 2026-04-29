@@ -6,33 +6,37 @@ Feature vector: [a1,b1,c1, a2,b2,c2]
   Subscript 2 = 100ms delay profile
 
 CCAs in GNB model:
-  bic            : 5 segments
-  cubic          : 5 segments
-  htcp           : 5 segments
-  hybla          : 5 segments
-  illinois       : 5 segments
-  reno           : 5 segments
-  scalable       : 5 segments
-  vegas          : 5 segments
-  veno           : 5 segments
-  westwood       : 5 segments
-  yeah           : 5 segments
+  bic            : 7 segments
+  cubic          : 7 segments
+  htcp           : 7 segments
+  hybla          : 7 segments
+  illinois       : 7 segments
+  reno           : 6 segments
+  scalable       : 7 segments
+  vegas          : 7 segments
+  veno           : 7 segments
+  westwood       : 7 segments
+  yeah           : 7 segments
+
+Pairs skipped due to errors:
+  cc-reno_aqm-droptail_bw-2000_buf-20_1777402024_tcp.csv + cc-reno_aqm-droptail_bw-2000_buf-20_1777402193_tcp.csv: No columns to parse from file
+  cc-reno_aqm-droptail_bw-2000_buf-20_1777402405_tcp.csv + cc-reno_aqm-droptail_bw-2000_buf-20_1777402820_tcp.csv: No columns to parse from file
 
 Cross-validation report:
               precision    recall  f1-score   support
 
-         bic      0.500     0.600     0.545         5
-       cubic      0.333     0.400     0.364         5
-        htcp      1.000     0.400     0.571         5
-       hybla      0.571     0.800     0.667         5
-    illinois      0.400     0.400     0.400         5
-        reno      0.250     0.400     0.308         5
-    scalable      1.000     0.600     0.750         5
-       vegas      1.000     0.800     0.889         5
-        veno      0.667     0.800     0.727         5
-    westwood      1.000     0.800     0.889         5
-        yeah      0.750     0.600     0.667         5
+         bic      0.286     0.286     0.286         7
+       cubic      0.714     0.714     0.714         7
+        htcp      0.571     0.571     0.571         7
+       hybla      0.667     0.857     0.750         7
+    illinois      0.357     0.714     0.476         7
+        reno      0.400     0.333     0.364         6
+    scalable      1.000     0.571     0.727         7
+       vegas      0.857     0.857     0.857         7
+        veno      0.833     0.714     0.769         7
+    westwood      1.000     0.571     0.727         7
+        yeah      0.833     0.714     0.769         7
 
-    accuracy                          0.600        55
-   macro avg      0.679     0.600     0.616        55
-weighted avg      0.679     0.600     0.616        55
+    accuracy                          0.632        76
+   macro avg      0.684     0.628     0.637        76
+weighted avg      0.687     0.632     0.641        76

@@ -66,13 +66,14 @@ def remove_slow_start(t, bif, drop_fraction=0.4):
 def segment_bif(t, bif,
                 drop_fraction=0.35,
                 min_duration_s=0.5,
-                min_points=20):
+                min_points=20,
+                bif_min=None):
     """
     Split the congestion-avoidance trace into individual segments.
 
     Each segment is one oscillation cycle — the region between two
     consecutive back-offs. A back-off is detected as a drop of more
-    than drop_fraction in BiF, occurring above BIF_MIN_BYTES.
+    than drop_fraction in BiF, occurring above bif_min.
 
     Parameters
     ----------
@@ -80,20 +81,24 @@ def segment_bif(t, bif,
     bif             : BiF values  (congestion-avoidance phase)
     drop_fraction   : minimum fractional drop to count as a back-off
     min_duration_s  : discard segments shorter than this (seconds)
-                      Lowered to 0.5s for 2000 Kbps — oscillations
-                      are faster at higher bandwidth
     min_points      : discard segments with fewer points than this
+    bif_min         : minimum BiF floor to count a drop as a back-off.
+                      Defaults to BIF_MIN_BYTES (global, tuned for bulk
+                      transfers). Pass a lower value for short browser
+                      flows where per-flow BiF is naturally lower due
+                      to bandwidth sharing between concurrent connections.
 
     Returns
     -------
     segments : list of (t_seg, bif_seg) tuples
     """
+    floor     = bif_min if bif_min is not None else BIF_MIN_BYTES
     segments  = []
     seg_start = 0
 
     for i in range(5, len(bif)):
         is_backoff = (
-            bif[i - 1] > BIF_MIN_BYTES and
+            bif[i - 1] > floor and
             bif[i] < bif[i - 1] * (1.0 - drop_fraction)
         )
         if is_backoff:
@@ -115,5 +120,5 @@ def segment_bif(t, bif,
 
     print(f"  Found {len(segments)} segments  "
           f"(min_duration={min_duration_s}s, min_pts={min_points}, "
-          f"BiF_min={BIF_MIN_BYTES}B)")
+          f"BiF_min={floor}B)")
     return segments

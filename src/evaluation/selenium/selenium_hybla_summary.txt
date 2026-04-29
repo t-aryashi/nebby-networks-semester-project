@@ -1,23 +1,20 @@
-Nebby Selenium Measurement — HYBLA
-=======================================================
-True CCA (set by sysctl): HYBLA
+Nebby Selenium — HYBLA  (QUIC disabled, TCP only)
+============================================================
+True CCA (kernel sysctl): HYBLA
 
-PORT     ASSET TYPE           PREDICTED CCA     CONF      SIZE
-──────── ──────────────────── ─────────────── ──────  ────────
-48008    video                bbr              100%     170KB
-42292    static (large)       bbr              100%      69KB
-47994    static (large)       unknown            0%      17KB  (too small)
-48002    static (small)       unknown            0%      17KB  (too small)
-47988    static (small)       bbr              100%       0KB
-47990    static (small)       bbr              100%       0KB
-47978    static (small)       unknown            0%       0KB  (too small)
-42296    static (small)       unknown            0%       0KB  (too small)
-42288    static (small)       unknown            0%       0KB  (too small)
+PORT     ASSET TYPE           PRED CCA        CONF      SIZE  CORRECT?
+─────────────────────────────────────────────────────────────────
+52890    video                vegas          100%    2845KB  ✗
+39518    static (large)       vegas          100%    1540KB  ✗
+52844    static (large)       reno           100%     200KB  ✗
+52838    static (small)       illinois       100%     200KB  ✗
+52874    static (small)       reno           100%      67KB  ✗
+52860    static (small)       illinois       100%      67KB  ✗
 
-Classified: 4/9 flows  (5 too small/short to classify)
-Kernel sysctl CCA: HYBLA  (Chrome's QUIC stack ignores this — detecting BBR is expected)
+Classifiable flows : 6/6
+Correct predictions: 0/6 = 0%
 
-Asset type → detected CCA  (Nebby Table 8 equivalent):
-  static (large)      : bbr, unknown
-  static (small)      : unknown, bbr, bbr, unknown, unknown, unknown
-  video               : bbr
+Asset type → CCA mapping (Nebby Table 8 equivalent):
+  static (large)        : vegas  (from 2 classified flows)
+  static (small)        : illinois  (from 3 classified flows)
+  video                 : vegas  (from 1 classified flows)

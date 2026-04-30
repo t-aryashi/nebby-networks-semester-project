@@ -4,15 +4,15 @@ True CCA (kernel sysctl): BIC
 
 PORT     ASSET TYPE           PRED CCA        CONF      SIZE  CORRECT?
 ─────────────────────────────────────────────────────────────────
-42662    video                veno           100%    5120KB  ✗
-42658    static (large)       vegas          100%    2073KB  ✗
-42626    static (large)       reno           100%     200KB  ✗
-42584    static (small)       illinois       100%     200KB  ✗
+39792    video                illinois       100%    5120KB  ✗
+39802    static (large)       illinois       100%     436KB  ✗
+39790    static (large)       illinois       100%     200KB  ✗
+39770    static (small)       illinois       100%     200KB  ✗
 
 Classifiable flows : 4/4
 Correct predictions: 0/4 = 0%
 
 Asset type → CCA mapping (Nebby Table 8 equivalent):
-  static (large)        : vegas  (from 2 classified flows)
+  static (large)        : illinois  (from 2 classified flows)
   static (small)        : illinois  (from 1 classified flows)
-  video                 : veno  (from 1 classified flows)
+  video                 : illinois  (from 1 classified flows)

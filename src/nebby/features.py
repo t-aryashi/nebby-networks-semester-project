@@ -154,3 +154,25 @@ def extract_features_dual_profile(csv_50ms, csv_100ms,
     # under the same conditions — segments align by oscillation index)
     feats_6d = np.hstack([f50[:n], f100[:n]])   # (n, 6)
     return feats_6d, n
+
+def extract_features_6d_from_bif(t, bif):
+    # profile 1 (fast smoothing)
+    from bif import smooth_bif
+    from preprocess import remove_slow_start, segment_bif
+
+    t1, bif1 = smooth_bif(t, bif, 0.05)
+    t1, bif1 = remove_slow_start(t1, bif1)
+    seg1 = segment_bif(t1, bif1)
+    f1 = extract_features(seg1)
+
+    # profile 2 (slow smoothing)
+    t2, bif2 = smooth_bif(t, bif, 0.10)
+    t2, bif2 = remove_slow_start(t2, bif2)
+    seg2 = segment_bif(t2, bif2)
+    f2 = extract_features(seg2)
+
+    n = min(len(f1), len(f2))
+    if n == 0:
+        return np.empty((0, 6))
+
+    return np.hstack([f1[:n], f2[:n]])

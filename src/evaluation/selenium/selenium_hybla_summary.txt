@@ -4,17 +4,16 @@ True CCA (kernel sysctl): HYBLA
 
 PORT     ASSET TYPE           PRED CCA        CONF      SIZE  CORRECT?
 ─────────────────────────────────────────────────────────────────
-52890    video                vegas          100%    2845KB  ✗
-39518    static (large)       vegas          100%    1540KB  ✗
-52844    static (large)       reno           100%     200KB  ✗
-52838    static (small)       illinois       100%     200KB  ✗
-52874    static (small)       reno           100%      67KB  ✗
-52860    static (small)       illinois       100%      67KB  ✗
+47448    video                illinois       100%    5120KB  ✗
+47468    static (large)       illinois        50%     338KB  ✗
+47442    static (large)       bic            100%     200KB  ✗
+47420    static (small)       illinois       100%     200KB  ✗
+44800    static (small)       illinois       100%      96KB  ✗
 
-Classifiable flows : 6/6
-Correct predictions: 0/6 = 0%
+Classifiable flows : 5/5
+Correct predictions: 0/5 = 0%
 
 Asset type → CCA mapping (Nebby Table 8 equivalent):
-  static (large)        : vegas  (from 2 classified flows)
-  static (small)        : illinois  (from 3 classified flows)
-  video                 : vegas  (from 1 classified flows)
+  static (large)        : illinois  (from 2 classified flows)
+  static (small)        : illinois  (from 2 classified flows)
+  video                 : illinois  (from 1 classified flows)

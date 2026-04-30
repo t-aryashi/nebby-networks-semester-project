@@ -4,15 +4,15 @@ True CCA (kernel sysctl): VEGAS
 
 PORT     ASSET TYPE           PRED CCA        CONF      SIZE  CORRECT?
 ─────────────────────────────────────────────────────────────────
-48314    video                veno           100%    1119KB  ✗
-48298    static (large)       veno           100%    1059KB  ✗
-48282    static (large)       reno           100%     200KB  ✗
-48278    static (small)       htcp           100%     200KB  ✗
+48102    video                illinois       100%    4850KB  ✗
+48106    static (large)       illinois       100%     437KB  ✗
+48098    static (large)       illinois       100%     200KB  ✗
+48094    static (small)       illinois       100%     200KB  ✗
 
 Classifiable flows : 4/4
 Correct predictions: 0/4 = 0%
 
 Asset type → CCA mapping (Nebby Table 8 equivalent):
-  static (large)        : veno  (from 2 classified flows)
-  static (small)        : htcp  (from 1 classified flows)
-  video                 : veno  (from 1 classified flows)
+  static (large)        : illinois  (from 2 classified flows)
+  static (small)        : illinois  (from 1 classified flows)
+  video                 : illinois  (from 1 classified flows)

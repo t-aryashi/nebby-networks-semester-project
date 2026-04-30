@@ -11,32 +11,28 @@ CCAs in GNB model:
   htcp           : 7 segments
   hybla          : 7 segments
   illinois       : 7 segments
-  reno           : 6 segments
+  reno           : 7 segments
   scalable       : 7 segments
   vegas          : 7 segments
   veno           : 7 segments
   westwood       : 7 segments
   yeah           : 7 segments
 
-Pairs skipped due to errors:
-  cc-reno_aqm-droptail_bw-2000_buf-20_1777402024_tcp.csv + cc-reno_aqm-droptail_bw-2000_buf-20_1777402193_tcp.csv: No columns to parse from file
-  cc-reno_aqm-droptail_bw-2000_buf-20_1777402405_tcp.csv + cc-reno_aqm-droptail_bw-2000_buf-20_1777402820_tcp.csv: No columns to parse from file
-
 Cross-validation report:
               precision    recall  f1-score   support
 
          bic      0.286     0.286     0.286         7
        cubic      0.714     0.714     0.714         7
-        htcp      0.571     0.571     0.571         7
+        htcp      0.500     0.714     0.588         7
        hybla      0.667     0.857     0.750         7
-    illinois      0.357     0.714     0.476         7
-        reno      0.400     0.333     0.364         6
+    illinois      0.400     0.571     0.471         7
+        reno      0.667     0.571     0.615         7
     scalable      1.000     0.571     0.727         7
-       vegas      0.857     0.857     0.857         7
-        veno      0.833     0.714     0.769         7
-    westwood      1.000     0.571     0.727         7
-        yeah      0.833     0.714     0.769         7
+       vegas      0.667     0.857     0.750         7
+        veno      1.000     0.571     0.727         7
+    westwood      1.000     0.857     0.923         7
+        yeah      1.000     0.714     0.833         7
 
-    accuracy                          0.632        76
-   macro avg      0.684     0.628     0.637        76
-weighted avg      0.687     0.632     0.641        76
+    accuracy                          0.662        77
+   macro avg      0.718     0.662     0.671        77
+weighted avg      0.718     0.662     0.671        77

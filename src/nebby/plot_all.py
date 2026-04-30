@@ -15,6 +15,7 @@ Outputs (saved to ../evaluation/):
 """
 
 import os, sys, glob, re, argparse
+from train import pair_traces
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -328,20 +329,30 @@ def plot_bbr_detail(groups, out_dir, rtt_s=RTT_S):
 #          (replicates paper Figure 4 structure)
 # ══════════════════════════════════════════════════════════════════════════════
 
-def plot_per_delay(groups, out_dir, window_s=40):
+def plot_per_delay(csv_dir, out_dir, window_s=40):
     """
-    For each CCA, show two columns: delay=50ms (left) and delay=100ms (right).
-    This directly mirrors Figure 4 in the paper.
+    Final correct version:
+    - Uses SAME pairing logic as training (pair_traces)
+    - No ordering assumptions
+    - Guarantees correct 50ms vs 100ms pairing
+    """
 
-    Requires filenames to contain delay info. Since your filenames use
-    timestamps (not delay), we split by assuming first half of files per CCA
-    = first delay, second half = second delay. If you have exactly 2 files
-    per CCA this works perfectly.
-    """
-    ccas = sorted(groups.keys())
-    n    = len(ccas)
-    if n == 0:
+    pairs, unpaired = pair_traces(csv_dir)
+
+    if not pairs:
+        print("No valid pairs found.")
         return
+
+    if unpaired:
+        print(f"WARNING: {len(unpaired)} unpaired file(s) skipped")
+
+    # Group pairs by CCA
+    by_cca = {}
+    for cca, f50, f100 in pairs:
+        by_cca.setdefault(cca, []).append((f50, f100))
+
+    ccas = sorted(by_cca.keys())
+    n    = len(ccas)
 
     fig, axes_grid = plt.subplots(
         n, 2,
@@ -350,53 +361,60 @@ def plot_per_delay(groups, out_dir, window_s=40):
     )
     fig.subplots_adjust(hspace=0.5, wspace=0.3)
 
-    delay_labels = ['Delay profile 1 (shorter)', 'Delay profile 2 (longer)']
-
     for row, cca in enumerate(ccas):
-        files = groups[cca]
         color = CCA_COLORS.get(cca, '#555555')
+        pairs_list = by_cca[cca]
 
-        # Split files into two groups (by index — assumes 2 delay profiles)
-        mid   = max(1, len(files) // 2)
-        splits = [files[:mid], files[mid:]]
-        if len(files) == 1:
-            splits = [files, files]   # duplicate single trace
+        ax_left  = axes_grid[row][0]   # 50ms
+        ax_right = axes_grid[row][1]   # 100ms
 
-        for col, (split_files, dlabel) in enumerate(zip(splits, delay_labels)):
-            ax = axes_grid[row][col]
+        for f50, f100 in pairs_list:
+            try:
+                # IMPORTANT: correct RTT for smoothing
+                t1, _, bif1, _ = load_trace(f50, rtt_s=0.1)
+                t2, _, bif2, _ = load_trace(f100, rtt_s=0.2)
+            except Exception as e:
+                print(f"SKIP {f50}, {f100}: {e}")
+                continue
 
-            for fpath in split_files:
-                try:
-                    t, bif_raw, bif_s, meta = load_trace(fpath)
-                except Exception:
-                    continue
+            # Apply time window
+            m1 = t1 <= (t1[0] + window_s)
+            m2 = t2 <= (t2[0] + window_s)
 
-                mask = t <= (t[0] + window_s)
-                t_w  = t[mask]
-                bs_w = bif_s[mask]
+            t1, bif1 = t1[m1], bif1[m1]
+            t2, bif2 = t2[m2], bif2[m2]
 
-                ax.plot(t_w, bs_w / 1024, color=color,
-                        lw=1.5, alpha=0.8)
-                ax.fill_between(t_w, 0, bs_w / 1024,
-                                alpha=0.15, color=color)
+            # Plot 50ms
+            ax_left.plot(t1, bif1 / 1024,
+                         color=color, lw=1.5, alpha=0.8)
+            ax_left.fill_between(t1, 0, bif1 / 1024,
+                                 color=color, alpha=0.15)
 
-            ax.set_title(f"{cca.upper()} — {dlabel}", fontsize=9)
+            # Plot 100ms
+            ax_right.plot(t2, bif2 / 1024,
+                          color=color, lw=1.5, alpha=0.8)
+            ax_right.fill_between(t2, 0, bif2 / 1024,
+                                  color=color, alpha=0.15)
+
+        ax_left.set_title(f"{cca.upper()} — 50ms RTT", fontsize=9)
+        ax_right.set_title(f"{cca.upper()} — 100ms RTT", fontsize=9)
+
+        for ax in (ax_left, ax_right):
             ax.set_xlabel("Time (s)", fontsize=7)
             ax.set_ylabel("KB in flight", fontsize=7)
             ax.tick_params(labelsize=7)
             ax.grid(True, alpha=0.25)
 
     fig.suptitle(
-        "BiF per CCA per Delay Profile\n"
-        "(mirrors Figure 4 from Nebby paper)",
+        "BiF per CCA per Delay (Correct Pairing)",
         fontsize=13, y=1.01,
     )
 
     path = os.path.join(out_dir, 'bif_per_delay.png')
     fig.savefig(path, dpi=150, bbox_inches='tight')
     plt.close()
-    print(f"Saved: {path}")
 
+    print(f"Saved: {path}")
 
 # ══════════════════════════════════════════════════════════════════════════════
 # PLOT 4 — Derivative plot for all CCAs (helps debug segmentation)
@@ -516,7 +534,7 @@ if __name__ == '__main__':
 
     plot_all_ccas(groups, OUT_DIR, window_s=args.window)
     plot_bbr_detail(groups, OUT_DIR, rtt_s=args.rtt)
-    plot_per_delay(groups, OUT_DIR, window_s=args.window or 60)
+    plot_per_delay(args.dir, OUT_DIR, window_s=args.window or 60)
     plot_derivatives(groups, OUT_DIR, window_s=args.window or 60)
 
     print(f"\nDone. All plots saved to  {OUT_DIR}/")

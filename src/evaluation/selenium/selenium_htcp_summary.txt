@@ -4,15 +4,15 @@ True CCA (kernel sysctl): HTCP
 
 PORT     ASSET TYPE           PRED CCA        CONF      SIZE  CORRECT?
 ─────────────────────────────────────────────────────────────────
-43084    video                reno           100%    3531KB  ✗
-35458    static (large)       vegas          100%    2083KB  ✗
-35418    static (large)       illinois       100%     200KB  ✗
-35404    static (small)       illinois       100%     200KB  ✗
+53644    video                illinois       100%    5120KB  ✗
+53662    static (large)       illinois       100%     347KB  ✗
+53628    static (large)       illinois       100%     200KB  ✗
+53606    static (small)       illinois       100%     200KB  ✗
 
 Classifiable flows : 4/4
 Correct predictions: 0/4 = 0%
 
 Asset type → CCA mapping (Nebby Table 8 equivalent):
-  static (large)        : vegas  (from 2 classified flows)
+  static (large)        : illinois  (from 2 classified flows)
   static (small)        : illinois  (from 1 classified flows)
-  video                 : reno  (from 1 classified flows)
+  video                 : illinois  (from 1 classified flows)

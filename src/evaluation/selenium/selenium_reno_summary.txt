@@ -4,15 +4,15 @@ True CCA (kernel sysctl): RENO
 
 PORT     ASSET TYPE           PRED CCA        CONF      SIZE  CORRECT?
 ─────────────────────────────────────────────────────────────────
-42720    video                vegas          100%    2072KB  ✗
-42752    static (large)       vegas          100%    1506KB  ✗
-42700    static (large)       reno           100%     200KB  ✓
-42668    static (small)       reno           100%     200KB  ✓
+51156    video                illinois       100%    5120KB  ✗
+51180    static (large)       illinois       100%     358KB  ✗
+50808    static (large)       illinois       100%     200KB  ✗
+50784    static (small)       illinois       100%     200KB  ✗
 
 Classifiable flows : 4/4
-Correct predictions: 2/4 = 50%
+Correct predictions: 0/4 = 0%
 
 Asset type → CCA mapping (Nebby Table 8 equivalent):
-  static (large)        : vegas  (from 2 classified flows)
-  static (small)        : reno  (from 1 classified flows)
-  video                 : vegas  (from 1 classified flows)
+  static (large)        : illinois  (from 2 classified flows)
+  static (small)        : illinois  (from 1 classified flows)
+  video                 : illinois  (from 1 classified flows)

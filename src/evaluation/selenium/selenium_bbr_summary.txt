@@ -4,15 +4,15 @@ True CCA (kernel sysctl): BBR
 
 PORT     ASSET TYPE           PRED CCA        CONF      SIZE  CORRECT?
 ─────────────────────────────────────────────────────────────────
-44504    video                reno           100%    1155KB  ✗
-42034    static (large)       veno           100%    1051KB  ✗
-42020    static (large)       reno           100%     200KB  ✗
-42004    static (small)       reno           100%     200KB  ✗
+56082    video                illinois       100%    5120KB  ✗
+56090    static (large)       illinois       100%     246KB  ✗
+56076    static (large)       cubic          100%     200KB  ✗
+56074    static (small)       illinois       100%     200KB  ✗
 
 Classifiable flows : 4/4
 Correct predictions: 0/4 = 0%
 
 Asset type → CCA mapping (Nebby Table 8 equivalent):
-  static (large)        : veno  (from 2 classified flows)
-  static (small)        : reno  (from 1 classified flows)
-  video                 : reno  (from 1 classified flows)
+  static (large)        : illinois  (from 2 classified flows)
+  static (small)        : illinois  (from 1 classified flows)
+  video                 : illinois  (from 1 classified flows)

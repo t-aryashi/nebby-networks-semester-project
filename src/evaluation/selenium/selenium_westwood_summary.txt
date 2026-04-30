@@ -4,15 +4,15 @@ True CCA (kernel sysctl): WESTWOOD
 
 PORT     ASSET TYPE           PRED CCA        CONF      SIZE  CORRECT?
 ─────────────────────────────────────────────────────────────────
-50124    video                vegas          100%    2072KB  ✗
-50132    static (large)       vegas          100%    1517KB  ✗
-50084    static (large)       reno           100%     200KB  ✗
-58610    static (small)       veno           100%     200KB  ✗
+44456    video                illinois       100%    5120KB  ✗
+44464    static (large)       illinois        50%     352KB  ✗
+44450    static (large)       vegas          100%     200KB  ✗
+44432    static (small)       illinois       100%     200KB  ✗
 
 Classifiable flows : 4/4
 Correct predictions: 0/4 = 0%
 
 Asset type → CCA mapping (Nebby Table 8 equivalent):
-  static (large)        : vegas  (from 2 classified flows)
-  static (small)        : veno  (from 1 classified flows)
-  video                 : vegas  (from 1 classified flows)
+  static (large)        : illinois  (from 2 classified flows)
+  static (small)        : illinois  (from 1 classified flows)
+  video                 : illinois  (from 1 classified flows)

@@ -4,15 +4,15 @@ True CCA (kernel sysctl): ILLINOIS
 
 PORT     ASSET TYPE           PRED CCA        CONF      SIZE  CORRECT?
 ─────────────────────────────────────────────────────────────────
-55646    video                veno           100%    5120KB  ✗
-44940    static (large)       vegas          100%    2072KB  ✗
-44914    static (large)       reno           100%     200KB  ✗
-44898    static (small)       illinois       100%     200KB  ✓
+55870    video                illinois       100%    5120KB  ✓
+55882    static (large)       illinois       100%     436KB  ✓
+55866    static (large)       illinois       100%     200KB  ✓
+55856    static (small)       illinois       100%     200KB  ✓
 
 Classifiable flows : 4/4
-Correct predictions: 1/4 = 25%
+Correct predictions: 4/4 = 100%
 
 Asset type → CCA mapping (Nebby Table 8 equivalent):
-  static (large)        : vegas  (from 2 classified flows)
+  static (large)        : illinois  (from 2 classified flows)
   static (small)        : illinois  (from 1 classified flows)
-  video                 : veno  (from 1 classified flows)
+  video                 : illinois  (from 1 classified flows)

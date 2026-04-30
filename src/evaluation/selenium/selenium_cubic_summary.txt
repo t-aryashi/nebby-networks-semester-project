@@ -4,15 +4,13 @@ True CCA (kernel sysctl): CUBIC
 
 PORT     ASSET TYPE           PRED CCA        CONF      SIZE  CORRECT?
 ─────────────────────────────────────────────────────────────────
-36178    video                illinois       100%    1213KB  ✗
-47128    static (large)       reno           100%    1170KB  ✗
-47102    static (large)       veno           100%     200KB  ✗
-47062    static (small)       htcp           100%     200KB  ✗
+48276    video                illinois       100%    3728KB  ✗
+48270    static (large)       illinois       100%     200KB  ✗
+48260    static (large)       illinois       100%     200KB  ✗
 
-Classifiable flows : 4/4
-Correct predictions: 0/4 = 0%
+Classifiable flows : 3/3
+Correct predictions: 0/3 = 0%
 
 Asset type → CCA mapping (Nebby Table 8 equivalent):
-  static (large)        : reno  (from 2 classified flows)
-  static (small)        : htcp  (from 1 classified flows)
+  static (large)        : illinois  (from 2 classified flows)
   video                 : illinois  (from 1 classified flows)

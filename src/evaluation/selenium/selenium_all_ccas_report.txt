@@ -4,16 +4,16 @@ Equivalent to paper Table 8 — applied to local controlled setup
 
 CCA          CLASSIFIED   CORRECT  ACCURACY  VIDEO CCA    STATIC CCA  
 ─────────────────────────────────────────────────────────────────
-cubic                 4         0        0%  illinois     reno        
-reno                  4         2       50%  vegas        vegas       
-bbr                   4         0        0%  reno         veno        
-bic                   4         0        0%  veno         vegas       
-htcp                  4         0        0%  reno         vegas       
-hybla                 6         0        0%  vegas        vegas       
-illinois              4         1       25%  veno         vegas       
-vegas                 4         0        0%  veno         veno        
-veno                  4         0        0%  reno         vegas       
-westwood              4         0        0%  vegas        vegas       
+cubic                 4         0        0%  illinois     illinois    
+reno                  4         0        0%  illinois     illinois    
+bbr                   4         0        0%  illinois     illinois    
+bic                   4         0        0%  illinois     illinois    
+htcp                  4         0        0%  illinois     illinois    
+hybla                 5         0        0%  illinois     illinois    
+illinois              4         4      100%  illinois     illinois    
+vegas                 4         0        0%  illinois     illinois    
+veno                  4         0        0%  illinois     illinois    
+westwood              4         0        0%  illinois     illinois    
 
 NOVEL CONTRIBUTION vs paper (§4.5):
   Paper observes CCAs on real websites — cannot verify accuracy.

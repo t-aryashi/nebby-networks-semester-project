@@ -1,0 +1,39 @@
+Nebby QUIC Evaluation Report — Dual Profile
+============================================================
+
+TRACE-LEVEL ACCURACY : 9/15 = 60.0%
+
+  FILE                                             TRUE         PRED          CONF  OK?
+  ──────────────────────────────────────────────── ──────────── ──────────── ─────  ───
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777906510_quic.csv bbr          unknown      100%  ✗
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777907372_quic.csv bbr          unknown      100%  ✗
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777907866_quic.csv bbr          unknown      100%  ✗
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777908694_quic.csv bbr          unknown      100%  ✗
+  cc-bbr_aqm-droptail_bw-2000_buf-20_1777909236_quic.csv bbr          unknown      100%  ✗
+  cc-cubic_aqm-droptail_bw-2000_buf-20_1777906400_quic.csv cubic        cubic        100%  ✓
+  cc-cubic_aqm-droptail_bw-2000_buf-20_1777907264_quic.csv cubic        cubic        100%  ✓
+  cc-cubic_aqm-droptail_bw-2000_buf-20_1777907758_quic.csv cubic        reno         100%  ✗
+  cc-cubic_aqm-droptail_bw-2000_buf-20_1777908585_quic.csv cubic        cubic        100%  ✓
+  cc-cubic_aqm-droptail_bw-2000_buf-20_1777909128_quic.csv cubic        cubic        100%  ✓
+  cc-reno_aqm-droptail_bw-2000_buf-20_1777906293_quic.csv reno         reno         100%  ✓
+  cc-reno_aqm-droptail_bw-2000_buf-20_1777907156_quic.csv reno         reno         100%  ✓
+  cc-reno_aqm-droptail_bw-2000_buf-20_1777907644_quic.csv reno         reno         100%  ✓
+  cc-reno_aqm-droptail_bw-2000_buf-20_1777908478_quic.csv reno         reno         100%  ✓
+  cc-reno_aqm-droptail_bw-2000_buf-20_1777909021_quic.csv reno         reno         100%  ✓
+
+PER-CLASS TRACE ACCURACY:
+  bbr            : 0/5 = 0%  ░░░░░
+  cubic          : 4/5 = 80%  ████░
+  reno           : 5/5 = 100%  █████
+
+SEGMENT-LEVEL ACCURACY (GNB only): 90.0%  (9/10)
+
+SEGMENT CLASSIFICATION REPORT:
+              precision    recall  f1-score   support
+
+       cubic      1.000     0.800     0.889         5
+        reno      0.833     1.000     0.909         5
+
+    accuracy                          0.900        10
+   macro avg      0.917     0.900     0.899        10
+weighted avg      0.917     0.900     0.899        10

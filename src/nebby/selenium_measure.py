@@ -68,27 +68,30 @@ from classify   import detect_bbr, load_model, _majority_vote
 
 # ── config ────────────────────────────────────────────────────────────────────
 SERVER_IP   = '10.0.0.1'
-SERVER_PORT = 8080
+SERVER_PORT = 80           # ← port 80, same as generate_dataset.sh / start_server.sh
 BASE_URL    = f'http://{SERVER_IP}:{SERVER_PORT}'
 
-DEFAULT_BW    = 5000   # Kbps
+DEFAULT_BW    = 2000   # Kbps — same as training data
 DEFAULT_DELAY = 50     # ms one-way
 
 TRACES_DIR = '../traces'
 OUT_DIR    = '../evaluation/selenium'
 MODEL_DIR  = '../models'
 
-# Assets to fetch — order determines which wget starts first
-# Must match selenium_server.py ASSET_CCA_MAP
+MIN_FLOW_BYTES = 100 * 1024  # Ignore any flow smaller than 100KB
+
+# Assets to fetch — sizes tuned for 2000 Kbps / 5 flows = 400 Kbps per flow
+# At 400 Kbps: 1MB = 20s, 2MB = 40s — enough for multiple oscillation cycles
 ASSETS = [
-    {'file': 'video.bin',  'label': 'video',         'true_cca': 'bbr'  },
-    {'file': 'image1.bin', 'label': 'image (BBR)',   'true_cca': 'bbr'  },
-    {'file': 'image2.bin', 'label': 'image (CUBIC)', 'true_cca': 'cubic'},
-    {'file': 'style.css',  'label': 'CSS (CUBIC)',   'true_cca': 'cubic'},
-    {'file': 'script.js',  'label': 'JS (Reno)',     'true_cca': 'reno' },
+    {'file': 'video.bin',  'label': 'video',         'true_cca': 'bbr',   'size_mb': 2},
+    {'file': 'image1.bin', 'label': 'image (BBR)',   'true_cca': 'bbr',   'size_mb': 1},
+    {'file': 'image2.bin', 'label': 'image (CUBIC)', 'true_cca': 'cubic', 'size_mb': 1},
+    {'file': 'style.css',  'label': 'CSS (CUBIC)',   'true_cca': 'cubic', 'size_mb': 1},
+    {'file': 'script.js',  'label': 'JS (Reno)',     'true_cca': 'reno',  'size_mb': 1},
 ]
 
-MIN_FLOW_BYTES = 100 * 1024   # 100 KB minimum to classify
+# Total = 6MB at 400 Kbps per flow = ~120s max — manageable
+WGET_TIMEOUT = 80   # seconds per individual wget — fail fast if unreachable
 
 CCA_COLORS = {
     'bbr':     '#e63946',
@@ -128,89 +131,119 @@ def generate_bw_trace(bw_kbps, traces_dir=TRACES_DIR, duration_s=120):
 
 def run_parallel_wget(pcap_path, bw, delay, assets=ASSETS):
     """
-    Launch multiple concurrent wget processes inside a Mahimahi shell.
-    Each wget fetches a different asset → different TCP connection →
-    different server-side CCA (assigned by selenium_server.py).
+    Capture strategy: tcpdump runs OUTSIDE mahimahi on the host.
 
-    tcpdump captures everything on the ingress interface.
-    We use 'sudo -n' for tcpdump (non-interactive, no password prompt).
-    If that fails, we use 'tcpdump' directly (works if user is in pcap group).
+    WHY: When tcpdump runs inside mahimahi as a background process, mahimahi
+    sends SIGTERM (exit code 143) to its entire process group when the inner
+    bash command exits — killing tcpdump before the pcap is flushed.
 
-    The wget processes start with small staggered delays (0.5s apart) so
-    their slow-start phases don't all overlap at the same instant.
+    FIX: tcpdump captures on the uplink interface that mahimahi creates on the
+    host side. We discover this interface by listing network interfaces before
+    and after launching mahimahi, then capture on the new one.
+
+    ALTERNATIVE (simpler): capture on 'any' interface filtered to SERVER_IP.
+    This always works regardless of mahimahi's internal interface names.
+    tcpdump runs as a host process and is never killed by mahimahi.
     """
     trace_path = generate_bw_trace(bw)
 
-    # Build wget commands for each asset — staggered start
+    total_mb    = sum(a.get('size_mb', 1) for a in assets)
+    bw_per_flow = bw // len(assets)
+    est_time    = int(max(a.get('size_mb', 1) for a in assets) * 1024 * 1024
+                      * 8 / (bw_per_flow * 1000)) + 20
+    timeout_s   = max(120, est_time + 30)
+
+    print(f"  Fetching {len(assets)} assets in parallel...")
+    print(f"  Total: ~{total_mb}MB  BW: {bw}Kbps (~{bw_per_flow}Kbps/flow)")
+    print(f"  wget timeout: {WGET_TIMEOUT}s  subprocess timeout: {timeout_s}s")
+    for a in assets:
+        print(f"    /{a['file']:<15} {a.get('size_mb',1)}MB → true CCA: {a['true_cca']}")
+
+    # ── Step A: start tcpdump on the HOST, capturing all traffic to/from SERVER_IP ──
+    # Capture on 'any' so we don't need to know mahimahi's interface name.
+    # Filter: only packets involving SERVER_IP to avoid capturing unrelated traffic.
+    tcpdump_cmd = [
+        'sudo', '-n', 'tcpdump',
+        '-i', 'any',
+        '-w', pcap_path,
+        '-q',
+        f'host {SERVER_IP}',
+    ]
+    print(f"\n  Starting tcpdump on host (interface=any, filter=host {SERVER_IP})...")
+    try:
+        tdump = subprocess.Popen(
+            tcpdump_cmd,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
+        )
+    except FileNotFoundError:
+        print("  ERROR: tcpdump not found. Install with: sudo apt install tcpdump")
+        return False
+
+    time.sleep(1.5)   # let tcpdump open the interface before wget starts
+
+    # ── Step B: build wget commands — simple parallel fetch inside mahimahi ──
     wget_cmds = []
     for i, asset in enumerate(assets):
-        url      = f'{BASE_URL}/{asset["file"]}'
-        stagger  = i * 0.5   # 0.5s between each start
-        cmd      = (f'sleep {stagger} && '
-                    f'wget --tries=1 --timeout=120 '
-                    f'"{url}" -O /dev/null -q 2>/dev/null')
-        wget_cmds.append(cmd)
+        url     = f'{BASE_URL}/{asset["file"]}'
+        stagger = i * 0.3
+        wget_cmds.append(
+            f'sleep {stagger} && '
+            f'wget --tries=1 --timeout={WGET_TIMEOUT} --read-timeout=60 --no-cache '
+            f'{url} -O /dev/null -q'
+        )
 
-    # All wgets run in parallel inside one bash command
-    parallel_wget = ' & '.join(wget_cmds) + ' ; wait'
-
-    # tcpdump: try sudo -n first (non-interactive), fall back to direct
-    tcpdump_line = (
-        f'(sudo -n tcpdump -i ingress -w {pcap_path} -q 2>/dev/null || '
-        f'tcpdump -i ingress -w {pcap_path} -q 2>/dev/null) & '
-        f'DPID=$! ; '
-        f'sleep 0.5 ; '
-    )
-
-    inner_cmd = (
-        tcpdump_line +
-        parallel_wget + ' ; ' +
-        'sleep 2 ; '
-        'kill $DPID 2>/dev/null ; '
-        'wait $DPID 2>/dev/null'
-    )
+    # Inner cmd: just wget — no tcpdump, no backgrounding tricks.
+    # Mahimahi can kill this freely; tcpdump is safely outside.
+    inner_cmd = '( ' + ' & '.join(wget_cmds) + ' ; wait )'
 
     mahimahi_cmd = [
         'mm-delay', str(delay),
         'mm-link', trace_path, trace_path,
-        '--',
-        'bash', '-c', inner_cmd,
+        '--', 'bash', '-c', inner_cmd,
     ]
 
-    n_assets    = len(assets)
-    total_mb    = sum(20 if 'video' in a['file'] else 5
-                      for a in assets)
-    # Estimate: total_bytes / bw_bytes_per_sec + stagger overhead
-    bw_bytes_s  = bw * 1000 // 8
-    est_time    = int(total_mb * 1024 * 1024 / bw_bytes_s) + 30
-    timeout_s   = max(180, est_time)
+    print(f"  Launching mahimahi + wget...")
+    try:
+        result = subprocess.run(
+            mahimahi_cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            timeout=timeout_s,
+        )
+    except subprocess.TimeoutExpired:
+        print(f"  WARNING: mahimahi timed out after {timeout_s}s")
+    finally:
+        # ── Step C: stop tcpdump cleanly — send SIGTERM, wait for flush ──
+        tdump.terminate()
+        time.sleep(1.0)   # give tcpdump time to flush pcap write buffer
+        try:
+            tdump.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            tdump.kill()
 
-    print(f"  Fetching {n_assets} assets in parallel...")
-    print(f"  Total data: ~{total_mb}MB  BW: {bw}Kbps")
-    print(f"  Estimated time: {est_time}s  Timeout: {timeout_s}s")
-    for a in assets:
-        print(f"    {a['file']:<15} → true CCA: {a['true_cca']}")
-
-    result = subprocess.run(
-        mahimahi_cmd,
-        capture_output=True, text=True,
-        timeout=timeout_s,
-    )
-
-    if result.returncode != 0 and result.stderr.strip():
-        print(f"  stderr: {result.stderr[:200]}")
+    if result.stderr.strip():
+        # mahimahi always exits 1 due to packetshell; only print unexpected errors
+        for line in result.stderr.strip().splitlines():
+            if 'packetshell' not in line and 'Died on' not in line:
+                print(f"  wget stderr: {line}")
 
     exists = os.path.exists(pcap_path)
     size   = os.path.getsize(pcap_path) if exists else 0
     print(f"  pcap: {size:,} bytes", end='')
 
-    if size == 0:
-        print("  ← EMPTY")
-        print("\n  Possible causes:")
-        print("  1. tcpdump needs sudo without password.")
-        print("     Fix: sudo visudo → add: xcoder ALL=(ALL) NOPASSWD: /usr/bin/tcpdump")
-        print("  2. Server not running or not reachable at", BASE_URL)
-        print("  3. mm-link not producing ingress interface")
+    if size < 500:
+        print("  ← TOO SMALL (tcpdump may need sudo without password)")
+        print("  Fix: sudo visudo → add line:")
+        print("    xcoder ALL=(ALL) NOPASSWD: /usr/bin/tcpdump, /usr/bin/tshark")
+        # Check if tcpdump stderr has a clue
+        try:
+            td_err = tdump.stderr.read().decode(errors='replace').strip()
+            if td_err:
+                print(f"  tcpdump stderr: {td_err}")
+        except Exception:
+            pass
         return False
 
     print("  ← OK")
@@ -409,11 +442,11 @@ def map_to_assets(flow_results, assets=ASSETS):
 
     # Sort expected assets by file size (largest first)
     asset_sizes = {
-        'video.bin':  20 * 1024 * 1024,
-        'image1.bin':  5 * 1024 * 1024,
-        'image2.bin':  5 * 1024 * 1024,
-        'style.css':   3 * 1024 * 1024,
-        'script.js':   3 * 1024 * 1024,
+        'video.bin':  2 * 1024 * 1024,   # 2MB — matches ASSET_SIZES in server
+        'image1.bin': 1 * 1024 * 1024,   # 1MB
+        'image2.bin': 1 * 1024 * 1024,   # 1MB
+        'style.css':  1 * 1024 * 1024,   # 1MB
+        'script.js':  1 * 1024 * 1024,   # 1MB
     }
     sorted_assets = sorted(assets, key=lambda a: -asset_sizes.get(a['file'], 0))
 

@@ -54,7 +54,7 @@ import socketserver
 import threading
 
 ASSET_DIR    = '/tmp/nebby_assets'
-DEFAULT_PORT = 8080
+DEFAULT_PORT = 80    # matches generate_dataset.sh / start_server.sh
 
 # Linux socket option for per-connection CCA override
 # Defined in linux/tcp.h as TCP_CONGESTION = 13
@@ -70,14 +70,14 @@ ASSET_CCA_MAP = {
     'script.js':  'reno',   # JS CDN uses Reno
 }
 
-# Asset sizes — large enough for 10+ seconds at 400 Kbps per flow
-# 400 Kbps * 10s / 8 = 500 KB minimum → use much more for safety
+# Asset sizes — tuned for 2000 Kbps / 5 flows = 400 Kbps per flow
+# At 400 Kbps: 1MB = 20s ✓  2MB = 40s ✓  (need 15+ seconds for oscillations)
 ASSET_SIZES = {
-    'video.bin':  20 * 1024 * 1024,   # 20MB — long video chunk
-    'image1.bin':  5 * 1024 * 1024,   # 5MB  — large image
-    'image2.bin':  5 * 1024 * 1024,   # 5MB  — large image
-    'style.css':   3 * 1024 * 1024,   # 3MB  — CSS bundle
-    'script.js':   3 * 1024 * 1024,   # 3MB  — JS bundle
+    'video.bin':  2 * 1024 * 1024,   # 2MB
+    'image1.bin': 1 * 1024 * 1024,   # 1MB
+    'image2.bin': 1 * 1024 * 1024,   # 1MB
+    'style.css':  1 * 1024 * 1024,   # 1MB
+    'script.js':  1 * 1024 * 1024,   # 1MB
 }
 
 

@@ -86,7 +86,7 @@ def smooth_signal(t, signal, rtt_s=0.1):
 
 # ---------------- MAIN ----------------
 
-files = glob.glob("../candidates-measurements/*_tcp.csv")
+files = glob.glob("./*tcp.csv")
 
 fig_bif, ax_bif = plt.subplots(figsize=(14, 5))
 fig_rtt, ax_rtt = plt.subplots(figsize=(14, 5))

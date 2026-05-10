@@ -64,7 +64,6 @@ echo "  CC     : $QUIC_CC"
 echo "  URL    : $INNER_LINK"
 
 "$QUICHE_BIN" \
-    --no-verify \
     --wire-version 00000001 \
     "$INNER_LINK"
 

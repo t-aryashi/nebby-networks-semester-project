@@ -13,10 +13,16 @@ This file is structurally identical but uses:
   compute_bif_quic()             from quic_bif.py
   _get_quic_features_dual()      from train_quic.py
   pair_traces_quic()             from train_quic.py
+  detect_bbr_quic()              from classify_quic.py  ← KEY FIX
 
-Everything else — confusion matrix plotting, per-class accuracy chart,
-confidence histogram, BiF trace plots — is copy-pasted from evaluate.py
-and works unchanged on QUIC results.
+WHY detect_bbr_quic() INSTEAD OF detect_bbr()
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+detect_bbr() was tuned for TCP BiF (exact, from seq/ACK numbers).
+QUIC BiF is estimated — same shape but different absolute scale.
+The TCP thresholds caused all BBR QUIC traces to return None,
+showing pred=unknown in the evaluation plot.
+detect_bbr_quic() uses looser relative thresholds and periodicity
+checks that match the staircase pattern visible in QUIC BiF plots.
 
 Usage:
     python3 evaluate_quic.py
@@ -51,13 +57,14 @@ sys.path.insert(0, os.path.dirname(__file__))
 from bif        import smooth_bif
 from preprocess import remove_slow_start, segment_bif
 from features   import extract_features
-from classify   import detect_bbr, _majority_vote
+from classify   import _majority_vote
 
 # ── QUIC-specific modules ─────────────────────────────────────────────────────
-from quic_bif    import compute_bif_quic
-from train_quic  import (pair_traces_quic,
-                          _get_quic_features,
-                          _get_quic_features_dual)
+from quic_bif      import compute_bif_quic
+from train_quic    import (pair_traces_quic,
+                            _get_quic_features,
+                            _get_quic_features_dual)
+from classify_quic import detect_bbr_quic   # ← QUIC-tuned BBR detector
 
 # ── config ────────────────────────────────────────────────────────────────────
 CSV_DIR   = '../candidates-measurements-quic'
@@ -114,12 +121,12 @@ def load_model():
     print(f"  GNB classes  : {list(le.classes_)}")
     print(f"  Feature dim  : {n_feat}D  "
           f"({'dual-profile' if n_feat==6 else 'single-profile'})")
-    print(f"  BBR via rule : {RATE_BASED_CCAS}\n")
+    print(f"  BBR via rule : detect_bbr_quic() (QUIC-tuned)\n")
     return gnb, le
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# 2.  BBR FILES  (mirrors _bbr_files in evaluate.py, for QUIC CSVs)
+# 2.  BBR FILES
 # ══════════════════════════════════════════════════════════════════════════════
 
 def _bbr_files_quic(csv_dir):
@@ -133,9 +140,7 @@ def _bbr_files_quic(csv_dir):
     for f in files:
         cc = re.search(r'cc-(\w+)[_.]', os.path.basename(f))
         if cc and cc.group(1) in RATE_BASED_CCAS:
-            # Only take the 50ms file (first of the pair)
             bbr.append(f)
-    # De-duplicate by taking alternate files (50ms only)
     by_cca = defaultdict(list)
     for f in bbr:
         cc = re.search(r'cc-(\w+)[_.]', os.path.basename(f))
@@ -148,13 +153,13 @@ def _bbr_files_quic(csv_dir):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# 3.  PREDICT ALL  (mirrors predict_all in evaluate.py)
+# 3.  PREDICT ALL
 # ══════════════════════════════════════════════════════════════════════════════
 
 def predict_all_quic(csv_dir, gnb, le):
     """
-    Run full hybrid pipeline (BBR rule + GNB) on all QUIC traces.
-    Returns (seg_results, trace_results) — same structure as evaluate.py.
+    Run full hybrid pipeline (QUIC BBR rule + GNB) on all QUIC traces.
+    Returns (seg_results, trace_results).
     """
     pairs, unpaired = pair_traces_quic(csv_dir)
     bbr_files       = _bbr_files_quic(csv_dir)
@@ -163,10 +168,10 @@ def predict_all_quic(csv_dir, gnb, le):
     seg_results   = []
     trace_results = []
 
-    print(f"  {'TRUE':<12} {'PRED':<12} {'CONF':>5}  {'SEGS':>4}  {'METHOD':<12}  FILE")
-    print(f"  {'─'*12} {'─'*12} {'─'*5}  {'─'*4}  {'─'*12}  {'─'*40}")
+    print(f"  {'TRUE':<12} {'PRED':<12} {'CONF':>5}  {'SEGS':>4}  {'METHOD':<14}  FILE")
+    print(f"  {'─'*12} {'─'*12} {'─'*5}  {'─'*4}  {'─'*14}  {'─'*40}")
 
-    # ── BBR: rule-based ───────────────────────────────────────────────────────
+    # ── BBR: QUIC rule-based ──────────────────────────────────────────────────
     for fpath in bbr_files:
         fname      = os.path.basename(fpath)
         m          = re.search(r'cc-(\w+)[_.]', fname)
@@ -176,7 +181,8 @@ def predict_all_quic(csv_dir, gnb, le):
             t, bif       = compute_bif_quic(fpath, SERVER_IP)
             t_s, bif_s   = smooth_bif(t, bif, 0.10)
             t_ss, bif_ss = remove_slow_start(t_s, bif_s)
-            bbr_result   = detect_bbr(t_ss, bif_ss, 0.10)
+            # ← Use QUIC-tuned detector, not TCP detect_bbr()
+            bbr_result   = detect_bbr_quic(t_ss, bif_ss, 0.10)
         except Exception as e:
             print(f"  {true_label:<12} ERROR: {e}")
             continue
@@ -186,13 +192,13 @@ def predict_all_quic(csv_dir, gnb, le):
         mark       = '✓' if correct else '✗'
 
         print(f"  {true_label:<12} {pred_label:<12} {'100%':>5}  {'─':>4}  "
-              f"{'rule':<12}  {mark} {fname}")
+              f"{'quic_bbr_rule':<14}  {mark} {fname}")
 
         trace_results.append({
             'file': fname, 'true_label': true_label,
             'pred_label': pred_label, 'confidence': 1.0,
             'n_segments': 0, 'correct': correct,
-            'method': 'bbr_rule', 't': t_ss, 'bif': bif_ss,
+            'method': 'quic_bbr_rule', 't': t_ss, 'bif': bif_ss,
         })
 
     # ── Loss-based: dual-profile GNB ─────────────────────────────────────────
@@ -220,7 +226,7 @@ def predict_all_quic(csv_dir, gnb, le):
 
         if n == 0:
             print(f"  {label:<12} {'unknown':<12} {'─':>5}     0  "
-                  f"{'no_segments':<12}  ✗ {fname50}")
+                  f"{'no_segments':<14}  ✗ {fname50}")
             trace_results.append({
                 'file': fname50, 'true_label': label,
                 'pred_label': 'unknown', 'confidence': 0.0,
@@ -229,15 +235,15 @@ def predict_all_quic(csv_dir, gnb, le):
             })
             continue
 
-        seg_preds          = gnb.predict(feats)
-        seg_probs          = gnb.predict_proba(feats)
-        pred_label, conf   = _majority_vote(seg_preds, le)
-        correct            = (pred_label == label)
-        mark               = '✓' if correct else '✗'
-        method             = f'GNB-{n_feat}D-QUIC'
+        seg_preds        = gnb.predict(feats)
+        seg_probs        = gnb.predict_proba(feats)
+        pred_label, conf = _majority_vote(seg_preds, le)
+        correct          = (pred_label == label)
+        mark             = '✓' if correct else '✗'
+        method           = f'GNB-{n_feat}D-QUIC'
 
         print(f"  {label:<12} {pred_label:<12} {conf:>4.0%}  {n:>4}  "
-              f"{method:<12}  {mark} {fname50}")
+              f"{method:<14}  {mark} {fname50}")
 
         try:
             true_enc = le.transform([label])[0]
@@ -266,7 +272,7 @@ def predict_all_quic(csv_dir, gnb, le):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# 4–7.  REPORTS + PLOTS  (identical to evaluate.py, filenames suffixed _quic)
+# 4.  REPORTS + PLOTS  (identical to evaluate.py, filenames suffixed _quic)
 # ══════════════════════════════════════════════════════════════════════════════
 
 def print_and_save_reports_quic(seg_results, trace_results, le, out_dir):
@@ -357,7 +363,7 @@ def plot_confusion_matrix_quic(trace_results, out_dir):
             'Nebby QUIC — Confusion Matrix\n'
             '(trace-level, ' +
             ('row-normalised %' if normalise else 'raw counts') +
-            ',  BBR via rule + others via 6D GNB)',
+            ',  BBR via QUIC rule + others via 6D GNB)',
             fontsize=10,
         )
         for i in range(n):
@@ -410,7 +416,7 @@ def plot_per_class_accuracy_quic(trace_results, out_dir):
     ax.set_ylim(0, 120)
     ax.set_ylabel('Trace-level accuracy (%)', fontsize=10)
     ax.set_title('QUIC Per-CCA Accuracy  '
-                 '(BBR via rule-based, others via 6D GNB)',
+                 '(BBR via QUIC rule-based, others via 6D GNB)',
                  fontsize=11)
     ax.legend(fontsize=9)
     ax.grid(True, alpha=0.25, axis='y')
@@ -535,7 +541,7 @@ if __name__ == '__main__':
     seg_results, trace_results = predict_all_quic(CSV_DIR, gnb, le)
 
     if not trace_results:
-        print("\nNo results. Check CSV_DIR contains QUIC CSVs from pcap2csv_quic.sh")
+        print("\nNo results. Check CSV_DIR contains QUIC CSVs.")
         sys.exit(1)
 
     print("\nGenerating reports and plots ...")

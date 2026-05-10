@@ -1,31 +1,30 @@
-Nebby — Selenium/Browser Measurement Report
+Nebby — Multi-Asset Browser Measurement Report
 (Equivalent to paper Table 8)
 =================================================================
 
-Server assigns per-socket CCA via TCP_CONGESTION socket option.
+Each asset fetched sequentially at full 2000 Kbps.
+Server assigns per-socket CCA via TCP_CONGESTION option.
 This simulates different CDNs serving different content types.
 
-ASSET                  TRUE CCA   PRED CCA      CONF      SIZE  OK?
+ASSET                  TRUE CCA   PRED CCA      CONF    SIZE  OK?
 ─────────────────────────────────────────────────────────────────
-video                  bbr        htcp         100%     2.0MB  ✗
-image (BBR)            bbr        illinois     100%     1.0MB  ✗
-image (CUBIC)          cubic      unknown        0%     1.0MB  ─
-CSS (CUBIC)            cubic      illinois     100%     1.0MB  ✗
-JS (Reno)              reno       unknown        0%     1.0MB  ─
+video                  bbr        unknown        0%     4MB  ─
+image (BBR)            bbr        unknown        0%     2MB  ─
+image (CUBIC)          cubic      unknown        0%     2MB  ─
+CSS (CUBIC)            cubic      unknown        0%     2MB  ─
+JS (Reno)              reno       unknown        0%     2MB  ─
 
-Classified : 3/5 flows
-Accuracy   : 0/3 = 0%
+Classified : 0/5 flows
+No classifiable flows
 
 Asset type → Predicted CCA  (paper Table 8 equivalent):
-  video                  → HTCP
-  image (BBR)            → ILLINOIS
-  CSS (CUBIC)            → ILLINOIS
 
 Paper finding (§4.5 Table 8):
-  Video/audio → BBR  |  Static assets → CUBIC
+  Video/audio → BBR  |  Static assets → CUBIC/Reno
   'BBR seems to be the CCA of choice for video streaming flows,
    while CUBIC is often used for static content.'
 
 NOVEL CONTRIBUTION:
   Paper observed real websites — could NOT verify accuracy.
-  We set the server CCA and VERIFY predictions → ground truth accuracy.
+  We set the CCA and VERIFY predictions → ground truth numbers.
+  Our accuracy: 0%  (paper could not compute this)

@@ -70,14 +70,14 @@ ASSET_CCA_MAP = {
     'script.js':  'reno',   # JS CDN uses Reno
 }
 
-# Asset sizes — tuned for 2000 Kbps / 5 flows = 400 Kbps per flow
-# At 400 Kbps: 1MB = 20s ✓  2MB = 40s ✓  (need 15+ seconds for oscillations)
+# Asset sizes — tuned for 2000 Kbps sequential (one flow at a time)
+# At 2000 Kbps: 4MB = 16s (good for BBR probing), 2MB = 8s (enough for sawtooth)
 ASSET_SIZES = {
-    'video.bin':  2 * 1024 * 1024,   # 2MB
-    'image1.bin': 1 * 1024 * 1024,   # 1MB
-    'image2.bin': 1 * 1024 * 1024,   # 1MB
-    'style.css':  1 * 1024 * 1024,   # 1MB
-    'script.js':  1 * 1024 * 1024,   # 1MB
+    'video.bin':  4 * 1024 * 1024,   # 4MB — BBR needs longer to show ProbeRTT
+    'image1.bin': 2 * 1024 * 1024,   # 2MB
+    'image2.bin': 2 * 1024 * 1024,   # 2MB
+    'style.css':  2 * 1024 * 1024,   # 2MB
+    'script.js':  2 * 1024 * 1024,   # 2MB
 }
 
 
